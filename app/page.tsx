@@ -19,12 +19,12 @@ export default function Page() {
             alt="Fox"
             width={1200}
             height={1200}
-            className="w-96 max-w-full"
+            className="w-120 max-w-full"
           />
         </div>
-        <PendulumText className="text-center text-white text-5xl font-black mt-16">
+        <PendulumText className="text-center text-white text-4xl font-black mt-16">
           <p className="uppercase">Under Maintenance</p>
-          <p className="text-2xl font-bold mt-4">We'll be back soon!</p>
+          <p className="text-xl font-bold mt-4">We'll be back soon!</p>
         </PendulumText>
       </div>
     </div>
