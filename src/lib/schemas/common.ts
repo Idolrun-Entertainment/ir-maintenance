@@ -1,0 +1,18 @@
+import { z } from "zod"
+
+export const paginationQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().optional(),
+})
+
+export type PaginationQuery = z.infer<typeof paginationQuerySchema>
+
+export function getPaginationMeta(total: number, page: number, limit: number) {
+  return {
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit) || 1,
+  }
+}

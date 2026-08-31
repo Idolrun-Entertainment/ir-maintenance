@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Tiptap CLI-installed source (third-party patterns)
+    "src/components/tiptap-*/**",
+    "src/hooks/use-tiptap-editor.ts",
+    "src/hooks/use-is-breakpoint.ts",
+    "src/lib/tiptap-utils.ts",
   ]),
 ]);
 
