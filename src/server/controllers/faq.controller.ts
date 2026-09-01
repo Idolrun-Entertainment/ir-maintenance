@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache"
 import type { NextRequest } from "next/server"
 
 import { handleError, successResponse } from "@/lib/http"
@@ -40,6 +41,7 @@ export const faqController = {
       await requireAdmin({ mode: "api" })
       const body = createFaqSchema.parse(await request.json())
       const data = await faqService.create(body)
+      revalidatePath("/")
       return successResponse(data, "FAQ created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -51,6 +53,7 @@ export const faqController = {
       await requireAdmin({ mode: "api" })
       const body = updateFaqSchema.parse(await request.json())
       const data = await faqService.update(id, body)
+      revalidatePath("/")
       return successResponse(data, "FAQ updated successfully")
     } catch (error) {
       return handleError(error)
@@ -61,6 +64,7 @@ export const faqController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await faqService.delete(id)
+      revalidatePath("/")
       return successResponse(data, "FAQ deleted successfully")
     } catch (error) {
       return handleError(error)

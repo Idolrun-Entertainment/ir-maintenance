@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache"
 import type { NextRequest } from "next/server"
 
 import { handleError, successResponse } from "@/lib/http"
@@ -40,6 +41,7 @@ export const blogController = {
       await requireAdmin({ mode: "api" })
       const body = createBlogSchema.parse(await request.json())
       const data = await blogService.create(body)
+      revalidatePath("/")
       return successResponse(data, "Blog created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -51,6 +53,7 @@ export const blogController = {
       await requireAdmin({ mode: "api" })
       const body = updateBlogSchema.parse(await request.json())
       const data = await blogService.update(id, body)
+      revalidatePath("/")
       return successResponse(data, "Blog updated successfully")
     } catch (error) {
       return handleError(error)
@@ -61,6 +64,7 @@ export const blogController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await blogService.delete(id)
+      revalidatePath("/")
       return successResponse(data, "Blog deleted successfully")
     } catch (error) {
       return handleError(error)

@@ -4,6 +4,11 @@ import { collectContentImages } from "@/lib/blog-content"
 import { blogService } from "@/server/services/blog.service"
 import { faqService } from "@/server/services/faq.service"
 
+// Home content comes from the database and is edited from /admin.
+// Without this the page would be prerendered once at build time and never
+// pick up blogs or FAQs created afterwards in production.
+export const revalidate = 300
+
 export default async function Page() {
   let blogs: {
     id: string
