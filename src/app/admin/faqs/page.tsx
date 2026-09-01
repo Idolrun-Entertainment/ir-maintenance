@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog"
@@ -48,37 +48,52 @@ export default function AdminFaqsPage() {
   const [saving, setSaving] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Faq | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  const loadFaqs = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const response = await api.get<ApiResponse<PaginatedResponse<Faq>>>(
-        "/faqs",
-        {
-          params: {
-            page: 1,
-            limit: 100,
-            search: search || undefined,
-          },
-        },
-      )
-
-      setFaqs(response.data.data?.items ?? [])
-    } catch (loadError) {
-      const message =
-        loadError instanceof Error ? loadError.message : "Failed to load FAQs"
-      setError(message)
-      toast.error(message)
-    } finally {
-      setLoading(false)
-    }
-  }, [search])
+  const [reloadNonce, setReloadNonce] = useState(0)
 
   useEffect(() => {
+    let cancelled = false
+
+    async function loadFaqs() {
+      try {
+        const response = await api.get<ApiResponse<PaginatedResponse<Faq>>>(
+          "/faqs",
+          {
+            params: {
+              page: 1,
+              limit: 100,
+              search: search || undefined,
+            },
+          },
+        )
+
+        if (cancelled) {
+          return
+        }
+
+        setFaqs(response.data.data?.items ?? [])
+        setError(null)
+      } catch (loadError) {
+        if (cancelled) {
+          return
+        }
+
+        const message =
+          loadError instanceof Error ? loadError.message : "Failed to load FAQs"
+        setError(message)
+        toast.error(message)
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
+    }
+
     void loadFaqs()
-  }, [loadFaqs])
+
+    return () => {
+      cancelled = true
+    }
+  }, [search, reloadNonce])
 
   function startCreate() {
     setEditingId("new")
@@ -117,7 +132,8 @@ export default function AdminFaqsPage() {
       }
 
       cancelEdit()
-      await loadFaqs()
+      setLoading(true)
+      setReloadNonce((current) => current + 1)
     } catch (saveError) {
       toast.error(saveError instanceof Error ? saveError.message : "Save failed")
     } finally {
@@ -136,7 +152,8 @@ export default function AdminFaqsPage() {
       await api.delete(`/faqs/${deleteTarget.id}`)
       toast.success("FAQ deleted")
       setDeleteTarget(null)
-      await loadFaqs()
+      setLoading(true)
+      setReloadNonce((current) => current + 1)
     } catch (deleteError) {
       toast.error(
         deleteError instanceof Error ? deleteError.message : "Delete failed",
@@ -161,7 +178,10 @@ export default function AdminFaqsPage() {
       <Input
         placeholder="Search FAQs..."
         value={search}
-        onChange={(event) => setSearch(event.target.value)}
+        onChange={(event) => {
+          setSearch(event.target.value)
+          setLoading(true)
+        }}
       />
 
       {error ? (

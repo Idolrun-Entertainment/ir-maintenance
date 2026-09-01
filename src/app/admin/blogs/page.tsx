@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
@@ -33,38 +33,53 @@ export default function AdminBlogsPage() {
   const [totalPages, setTotalPages] = useState(1)
   const [deleteTarget, setDeleteTarget] = useState<Blog | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  const loadBlogs = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const response = await api.get<ApiResponse<PaginatedResponse<Blog>>>(
-        "/blogs",
-        {
-          params: {
-            page,
-            limit: 10,
-            search: search || undefined,
-          },
-        },
-      )
-
-      setBlogs(response.data.data?.items ?? [])
-      setTotalPages(response.data.data?.meta.totalPages ?? 1)
-    } catch (loadError) {
-      const message =
-        loadError instanceof Error ? loadError.message : "Failed to load blogs"
-      setError(message)
-      toast.error(message)
-    } finally {
-      setLoading(false)
-    }
-  }, [page, search])
+  const [reloadNonce, setReloadNonce] = useState(0)
 
   useEffect(() => {
+    let cancelled = false
+
+    async function loadBlogs() {
+      try {
+        const response = await api.get<ApiResponse<PaginatedResponse<Blog>>>(
+          "/blogs",
+          {
+            params: {
+              page,
+              limit: 10,
+              search: search || undefined,
+            },
+          },
+        )
+
+        if (cancelled) {
+          return
+        }
+
+        setBlogs(response.data.data?.items ?? [])
+        setTotalPages(response.data.data?.meta.totalPages ?? 1)
+        setError(null)
+      } catch (loadError) {
+        if (cancelled) {
+          return
+        }
+
+        const message =
+          loadError instanceof Error ? loadError.message : "Failed to load blogs"
+        setError(message)
+        toast.error(message)
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
+    }
+
     void loadBlogs()
-  }, [loadBlogs])
+
+    return () => {
+      cancelled = true
+    }
+  }, [page, search, reloadNonce])
 
   async function handleDelete() {
     if (!deleteTarget) {
@@ -77,7 +92,8 @@ export default function AdminBlogsPage() {
       await api.delete(`/blogs/${deleteTarget.id}`)
       toast.success("Blog deleted")
       setDeleteTarget(null)
-      await loadBlogs()
+      setLoading(true)
+      setReloadNonce((current) => current + 1)
     } catch (deleteError) {
       toast.error(
         deleteError instanceof Error ? deleteError.message : "Delete failed",
@@ -106,6 +122,7 @@ export default function AdminBlogsPage() {
           onChange={(event) => {
             setPage(1)
             setSearch(event.target.value)
+            setLoading(true)
           }}
         />
       </div>
@@ -184,7 +201,10 @@ export default function AdminBlogsPage() {
             variant="outline"
             size="sm"
             disabled={page <= 1}
-            onClick={() => setPage((current) => current - 1)}
+            onClick={() => {
+              setLoading(true)
+              setPage((current) => current - 1)
+            }}
           >
             Previous
           </Button>
@@ -192,7 +212,10 @@ export default function AdminBlogsPage() {
             variant="outline"
             size="sm"
             disabled={page >= totalPages}
-            onClick={() => setPage((current) => current + 1)}
+            onClick={() => {
+              setLoading(true)
+              setPage((current) => current + 1)
+            }}
           >
             Next
           </Button>
