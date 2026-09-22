@@ -1,8 +1,9 @@
 import type { JSONContent } from "@tiptap/react"
 import Image from "next/image"
 
-import { parseBlogContent } from "@/lib/blog-content"
+import { parseBlogContent, parseImageLayout } from "@/lib/blog-content"
 import { sanitizeBlogHref } from "@/lib/sanitize-href"
+import { cn } from "@/lib/utils"
 
 type BlogBodyProps = {
   content: string
@@ -108,14 +109,29 @@ function renderBlock(node: JSONContent, index: number): React.ReactNode {
         return null
       }
 
+      // Size and alignment the admin set in the editor. Images saved before
+      // resizing existed report width `null` and keep filling the column.
+      const { width, align } = parseImageLayout(node.attrs)
+      const intrinsicWidth = width ?? 800
+
       return (
         <Image
           key={index}
           src={src}
           alt={alt}
-          width={800}
-          height={450}
-          className="my-4 h-auto w-full max-w-full"
+          width={intrinsicWidth}
+          height={Math.round(intrinsicWidth * 0.5625)}
+          className={cn(
+            "my-4 block h-auto max-w-full",
+            align === "center" && "mx-auto",
+            align === "right" && "ml-auto",
+          )}
+          // `auto` (not 100%) is the fallback: an image the admin never
+          // resized renders at its natural size instead of being upscaled to
+          // the column width, which is what made small logos render huge.
+          // max-w-full still wins on narrow screens, so an admin-set 700px
+          // image scales down on a phone instead of overflowing.
+          style={{ width: width ? `${width}px` : "auto" }}
           unoptimized={src.startsWith("http")}
         />
       )

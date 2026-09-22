@@ -334,10 +334,28 @@
 }
 
 .home-panel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.85rem;
   margin-top: 0.2rem;
   color: rgb(255 255 255 / 0.62);
   font-size: 0.72rem;
   line-height: 1.3;
+}
+
+.home-panel__date,
+.home-panel__views {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.home-panel__meta-icon {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: none;
+  opacity: 0.8;
 }
 
 .home-panel__body {
@@ -401,6 +419,206 @@
   max-width: 100%;
   height: auto;
   border-radius: 2px;
+}
+
+/* Public comment section — unauthenticated, one thread per blog. */
+.home-comments {
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgb(110 222 254 / 0.22);
+}
+
+.home-comments__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.82);
+}
+
+.home-comments__compose {
+  margin-bottom: 1.2rem;
+}
+
+.home-comments__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.05rem;
+  border: 1px solid var(--border-sky);
+  border-radius: 3px;
+  background-color: rgb(8 48 96 / 0.42);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+  transition: background-color 150ms ease;
+}
+
+/* Safari still paints the disclosure triangle without this. */
+.home-comments__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.home-comments__toggle:hover {
+  background-color: rgb(80 169 255 / 0.32);
+}
+
+.home-comments__toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(110 222 254 / 0.35);
+}
+
+.home-comments__compose[open] .home-comments__toggle {
+  color: rgb(255 255 255 / 0.7);
+}
+
+.home-comments__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.85rem;
+}
+
+.home-comments__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.home-comments__label {
+  color: rgb(255 255 255 / 0.62);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.home-comments__input,
+.home-comments__textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid rgb(110 222 254 / 0.28);
+  border-radius: 3px;
+  background-color: rgb(5 12 22 / 0.65);
+  color: #fff;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.home-comments__textarea {
+  min-height: 4.5rem;
+  resize: vertical;
+}
+
+.home-comments__input::placeholder,
+.home-comments__textarea::placeholder {
+  color: rgb(255 255 255 / 0.32);
+}
+
+.home-comments__input:focus-visible,
+.home-comments__textarea:focus-visible {
+  outline: none;
+  border-color: var(--border-sky);
+  box-shadow: 0 0 0 2px rgb(110 222 254 / 0.22);
+}
+
+.home-comments__textarea[aria-invalid="true"] {
+  border-color: #ff8f8f;
+}
+
+.home-comments__counter {
+  align-self: flex-end;
+  color: rgb(255 255 255 / 0.42);
+  font-size: 0.68rem;
+}
+
+.home-comments__error {
+  color: #ff9d9d;
+  font-size: 0.75rem;
+}
+
+.home-comments__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  padding: 0.45rem 1.05rem;
+  border: 1px solid var(--border-sky);
+  border-radius: 3px;
+  background-color: rgb(8 48 96 / 0.42);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.home-comments__submit:hover:not(:disabled) {
+  background-color: rgb(80 169 255 / 0.32);
+}
+
+.home-comments__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.home-comments__empty {
+  margin-top: 1rem;
+  color: rgb(255 255 255 / 0.5);
+  font-size: 0.8rem;
+}
+
+.home-comments__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.home-comments__item {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgb(110 222 254 / 0.16);
+  border-radius: 3px;
+  background-color: rgb(5 12 22 / 0.5);
+}
+
+.home-comments__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
+}
+
+.home-comments__author {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.home-comments__date {
+  color: rgb(255 255 255 / 0.45);
+  font-size: 0.7rem;
+}
+
+.home-comments__body {
+  margin-top: 0.3rem;
+  color: rgb(255 255 255 / 0.88);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .home-panel__empty {

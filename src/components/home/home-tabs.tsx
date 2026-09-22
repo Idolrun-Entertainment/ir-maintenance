@@ -1,10 +1,12 @@
 "use client"
 
 import Image from "next/image"
-import { ChevronDownIcon } from "lucide-react"
+import { CalendarIcon, ChevronDownIcon } from "lucide-react"
 import { useCallback, useId, useRef, useState } from "react"
 
 import { BlogBody } from "@/components/home/blog-body"
+import { BlogComments } from "@/components/home/blog-comments"
+import { BlogViews } from "@/components/home/blog-views"
 import {
   Dialog,
   DialogContent,
@@ -13,12 +15,15 @@ import {
 } from "@/components/ui/dialog"
 import { formatBlogDate } from "@/lib/format-date"
 import { homePanelAssets } from "@/lib/home-assets"
+import type { Comment } from "@/lib/types"
 
 export type HomeBlog = {
   id: string
   title: string
   date: string
   content: string
+  views: number
+  comments: Comment[]
 }
 
 export type HomeFaq = {
@@ -71,8 +76,15 @@ function UpdatesPanel({ blogs }: { blogs: HomeBlog[] }) {
           />
           <div className="home-panel__content">
             <h2 className="home-panel__title">{blog.title}</h2>
-            <p className="home-panel__meta">{formatBlogDate(blog.date)}</p>
+            <p className="home-panel__meta">
+              <span className="home-panel__date">
+                <CalendarIcon className="home-panel__meta-icon" aria-hidden />
+                {formatBlogDate(blog.date)}
+              </span>
+              <BlogViews blogId={blog.id} initialViews={blog.views} />
+            </p>
             <BlogBody content={blog.content} />
+            <BlogComments blogId={blog.id} initialComments={blog.comments} />
           </div>
         </article>
       ))}

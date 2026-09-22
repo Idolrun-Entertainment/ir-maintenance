@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import Image from "@tiptap/extension-image"
 import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
 import type { Editor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import { toast } from "sonner"
 
+import { ResizableImage } from "@/components/tiptap-node/image-node/image-resize-extension"
 import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension"
 import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu"
 import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button"
@@ -114,9 +114,13 @@ export function BlogContentEditor({
           protocols: ["http", "https", "mailto"],
         },
       }),
-      Image.configure({
+      // Registers node name `image` (see image-resize-extension), so this
+      // replaces the plain Image extension rather than adding to it.
+      ResizableImage.configure({
         inline: false,
         allowBase64: false,
+        minWidth: 80,
+        maxWidth: 1200,
       }),
       ImageUploadNode.configure({
         accept: "image/*",

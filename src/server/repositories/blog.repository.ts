@@ -51,6 +51,25 @@ export const blogRepository = {
     return prisma.blog.create({ data })
   },
 
+  // A single `UPDATE "Blog" SET views = views + 1`, so concurrent visitors
+  // cannot read-modify-write over each other.
+  incrementViews(id: string) {
+    return prisma.blog.update({
+      where: { id },
+      data: { views: { increment: 1 } },
+      select: { views: true },
+    })
+  },
+
+  // Throws P2025 for an unknown id, which handleError maps to 404 -- same
+  // contract as incrementViews.
+  findViews(id: string) {
+    return prisma.blog.findUniqueOrThrow({
+      where: { id },
+      select: { views: true },
+    })
+  },
+
   update(id: string, data: Prisma.BlogUpdateInput) {
     return prisma.blog.update({ where: { id }, data })
   },

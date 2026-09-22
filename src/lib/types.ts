@@ -6,8 +6,25 @@ export type Blog = {
   content: string
   imageUrl: string
   imagePublicId: string
+  views: number
   createdAt: string
   updatedAt: string
+}
+
+export type Comment = {
+  id: string
+  blogId: string
+  name: string
+  content: string
+  createdAt: string
+}
+
+// What the admin moderation list returns: a comment plus the blog it is on.
+export type AdminComment = Comment & {
+  blog: {
+    id: string
+    title: string
+  }
 }
 
 export type Faq = {

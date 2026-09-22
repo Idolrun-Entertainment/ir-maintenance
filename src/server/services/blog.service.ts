@@ -128,7 +128,20 @@ export const blogService = {
       content,
       imageUrl: input.imageUrl || cover.imageUrl,
       imagePublicId: input.imagePublicId || cover.imagePublicId,
+      views: input.views ?? 0,
     })
+  },
+
+  // Public, unauthenticated: the only write a visitor can make to a blog.
+  // A missing id surfaces as Prisma P2025, which handleError maps to 404.
+  incrementViews(id: string) {
+    return blogRepository.incrementViews(id)
+  },
+
+  // Same shape as incrementViews, for callers that are over the view-rate
+  // window and should see the real count without adding to it.
+  getViews(id: string) {
+    return blogRepository.findViews(id)
   },
 
   async update(id: string, input: UpdateBlogInput) {

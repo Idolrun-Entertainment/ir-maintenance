@@ -142,3 +142,62 @@ export function sanitizeBlogContent(raw: string): string {
     content: doc.content?.map(sanitizeNodeLinks),
   })
 }
+
+export type BlogImageAlign = "left" | "center" | "right"
+
+export type BlogImageLayout = {
+  width: number | null
+  align: BlogImageAlign
+}
+
+// The resize extension writes `minWidth: 80, maxWidth: 1200` in the editor;
+// clamping again here means a hand-edited document cannot force an absurd size
+// onto the public page.
+const MIN_IMAGE_WIDTH = 40
+const MAX_IMAGE_WIDTH = 2000
+
+/**
+ * Reads the display size an admin chose for an image in the Tiptap editor.
+ *
+ * `tiptap-extension-resize-image` persists layout as raw CSS text in the
+ * `containerStyle` attribute (e.g. `width: 420px; height: auto; margin: 0 auto;`).
+ * That CSS is never replayed onto the public page -- only a clamped number and a
+ * three-value alignment enum cross the boundary, so there is no CSS injection
+ * surface to sanitize. Images saved before resizing existed have no
+ * `containerStyle` and fall back to full width, exactly as they render today.
+ */
+export function parseImageLayout(
+  attrs?: Record<string, unknown> | null,
+): BlogImageLayout {
+  const containerStyle =
+    typeof attrs?.containerStyle === "string" ? attrs.containerStyle : ""
+
+  const widthMatch = containerStyle.match(/(?:^|[;\s])width:\s*([0-9.]+)px/)
+  const parsedWidth = widthMatch ? Number.parseFloat(widthMatch[1]) : Number.NaN
+
+  const width =
+    Number.isFinite(parsedWidth) && parsedWidth > 0
+      ? Math.min(Math.max(Math.round(parsedWidth), MIN_IMAGE_WIDTH), MAX_IMAGE_WIDTH)
+      : null
+
+  // The extension expresses alignment through the `margin` shorthand it writes
+  // on the container: `0 auto` centres, `0 0 0 auto` pushes right.
+  const marginMatch = containerStyle.match(/(?:^|[;\s])margin:\s*([^;]+)/)
+  const margin = marginMatch ? marginMatch[1].trim().split(/\s+/) : []
+
+  let align: BlogImageAlign = "left"
+
+  if (margin.length === 2 && margin[1] === "auto") {
+    align = "center"
+  } else if (margin.length === 4) {
+    const [, right, , left] = margin
+
+    if (left === "auto" && right === "auto") {
+      align = "center"
+    } else if (left === "auto") {
+      align = "right"
+    }
+  }
+
+  return { width, align }
+}

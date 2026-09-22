@@ -70,6 +70,13 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
         title: values.title,
         slug: values.slug || undefined,
         date: values.date,
+        // Only send the counter when the admin actually changed it. Visitors
+        // increment it while the form sits open, so resubmitting the value
+        // loaded at page load would silently roll those views back.
+        views:
+          Number(values.views) === blog?.views
+            ? undefined
+            : Number(values.views),
         content: values.content,
       })
 

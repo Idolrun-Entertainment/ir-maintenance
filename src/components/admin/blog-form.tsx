@@ -7,6 +7,7 @@ import { BlogContentEditor } from "@/components/admin/blog-content-editor"
 import { Button } from "@/components/ui/button"
 import {
   Field,
+  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
@@ -22,6 +23,7 @@ type BlogFormValues = {
   title: string
   slug: string
   date: string
+  views: string
   content: string
 }
 
@@ -50,6 +52,7 @@ export function BlogForm({
   const [slug, setSlug] = useState(initialValues?.slug ?? "")
   const [slugLocked, setSlugLocked] = useState(Boolean(initialValues?.slug))
   const [date, setDate] = useState(toDateInputValue(initialValues?.date))
+  const [views, setViews] = useState(initialValues?.views ?? "0")
   const [content, setContent] = useState(initialValues?.content ?? "")
   const [submitting, setSubmitting] = useState(false)
 
@@ -66,6 +69,11 @@ export function BlogForm({
       return
     }
 
+    if (!Number.isInteger(Number(views)) || Number(views) < 0) {
+      toast.error("Views must be a whole number of 0 or more")
+      return
+    }
+
     setSubmitting(true)
 
     try {
@@ -73,6 +81,7 @@ export function BlogForm({
         title,
         slug,
         date,
+        views,
         content,
       })
     } finally {
@@ -100,7 +109,7 @@ export function BlogForm({
           />
         </Field>
 
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-3">
           <Field>
             <FieldLabel htmlFor="slug">Slug (optional)</FieldLabel>
             <Input
@@ -124,6 +133,22 @@ export function BlogForm({
               onChange={(event) => setDate(event.target.value)}
               required
             />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="views">Views</FieldLabel>
+            <Input
+              id="views"
+              type="number"
+              min={0}
+              step={1}
+              value={views}
+              onChange={(event) => setViews(event.target.value)}
+              required
+            />
+            <FieldDescription>
+              Visitors add 1 on each visit. Editing this overwrites the count.
+            </FieldDescription>
           </Field>
         </div>
 
@@ -152,6 +177,7 @@ export function blogToFormValues(blog: Blog): BlogFormValues {
     title: blog.title,
     slug: blog.slug,
     date: toDateInputValue(blog.date),
+    views: String(blog.views),
     content: blog.content,
   }
 }

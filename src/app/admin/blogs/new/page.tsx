@@ -16,6 +16,7 @@ export default function NewBlogPage() {
         title: values.title,
         slug: values.slug || undefined,
         date: values.date,
+        views: Number(values.views),
         content: values.content,
       })
 
