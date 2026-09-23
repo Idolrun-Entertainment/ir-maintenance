@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ThemeToggle } from "@/components/admin/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { authClient } from "@/lib/auth-client"
@@ -41,21 +41,22 @@ export function AdminHeader({ user }: AdminHeaderProps) {
   }
 
   return (
-    <div className="mb-6 flex items-center justify-end gap-3 border-b pb-4">
+    <div className="mb-6 flex items-center justify-end gap-4 border-b pb-4">
+      <div className="flex items-center mr-4">
+
+        <ThemeToggle />
+      </div>
       <div className="flex items-center gap-3">
-        <Avatar size="sm">
-          {user.image ? <AvatarImage src={user.image} alt={user.name} /> : null}
-          <AvatarFallback>{getInitials(user.name || user.email)}</AvatarFallback>
-        </Avatar>
+ 
         <div className="text-right">
-          <p className="text-sm font-medium">{user.name}</p>
+          <p className="text-xs font-medium">{user.name}</p>
           <p className="text-muted-foreground text-xs">{user.email}</p>
         </div>
       </div>
       <Button
         type="button"
         variant="outline"
-        size="sm"
+        size="lg"
         disabled={signingOut}
         onClick={handleSignOut}
       >
