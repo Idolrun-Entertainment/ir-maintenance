@@ -11,9 +11,10 @@ export function HomeHero() {
         <Image
           src={topBackground.src}
           alt={topBackground.alt}
+          width={topBackground.width}
+          height={topBackground.height}
           priority
           className="home-hero__background"
-          fill
           sizes="100vw"
         />
         <div className="home-hero__brand">

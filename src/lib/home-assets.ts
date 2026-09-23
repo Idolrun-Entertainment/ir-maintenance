@@ -7,10 +7,10 @@ export type HomeImageAsset = {
 
 export const homeHeroAssets = {
   topBackground: {
-    src: "/images/top-bacground.png",
+    src: "/images/hero-background-battle.png",
     alt: "Battle Kards lightning and card artwork",
-    width: 2170,
-    height: 1522,
+    width: 6120,
+    height: 1892,
   },
   topMark: {
     src: "/images/idolrun-logo.png",
