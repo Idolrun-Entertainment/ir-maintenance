@@ -16,7 +16,7 @@ export const homeHeroAssets = {
 
 export const homePanelAssets = {
   blogBackground: {
-    src: "/images/blog-background.png",
+    src: "/images/blog-background.webp",
     alt: "",
     width: 1866,
     height: 1820,

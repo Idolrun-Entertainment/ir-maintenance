@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/landing/site-header"
 export default function HomeLoading() {
   return (
     <div className="min-h-svh bg-black text-white">
-      <SiteHeader accountHref="/sign-in" />
+      <SiteHeader />
       <main className="px-3 pb-16 sm:px-5">
         <GameHero />
         <div className="mx-auto w-full max-w-7xl">

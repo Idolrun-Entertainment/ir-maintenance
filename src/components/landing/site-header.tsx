@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 type SiteHeaderProps = {
-  accountHref: string
   current?: "game" | "updates"
 }
 
@@ -43,7 +42,7 @@ function CommunityLabel({ inline = false }: { inline?: boolean }) {
   )
 }
 
-export function SiteHeader({ accountHref, current = "game" }: SiteHeaderProps) {
+export function SiteHeader({ current = "game" }: SiteHeaderProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -84,7 +83,7 @@ export function SiteHeader({ accountHref, current = "game" }: SiteHeaderProps) {
               <UkFlag />
               English
             </span>
-            <Link href={accountHref} className="flex items-center gap-2 text-white transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand motion-reduce:transition-none">
+            <Link href="/admin" className="flex items-center gap-2 text-white transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand motion-reduce:transition-none">
               <User className="size-5" aria-hidden />
               Account
             </Link>
@@ -130,7 +129,7 @@ export function SiteHeader({ accountHref, current = "game" }: SiteHeaderProps) {
             English
           </span>
           <Link
-            href={accountHref}
+            href="/admin"
             className="flex items-center gap-2 text-[15px] font-medium text-white transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand motion-reduce:transition-none"
             onClick={() => setOpen(false)}
           >

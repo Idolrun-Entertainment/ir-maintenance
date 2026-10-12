@@ -6,13 +6,10 @@ import { GameHero } from "@/components/landing/game-hero"
 import { loadRecentNews, RecentNews } from "@/components/landing/recent-news"
 import { SiteFooter } from "@/components/landing/site-footer"
 import { SiteHeader } from "@/components/landing/site-header"
-import { getAccountHref } from "@/lib/account-href"
 
 export const revalidate = 300
 
 export default async function Page() {
-  const accountHref = await getAccountHref()
-
   const news = await loadRecentNews()
 
   return (
@@ -33,7 +30,7 @@ export default async function Page() {
 
       <div className="relative z-10 flex min-h-svh flex-col">
         <ForgetCachedHomeRedirect />
-        <SiteHeader accountHref={accountHref} />
+        <SiteHeader />
         <main className="flex-1 px-3 pb-16 sm:px-5">
           <GameHero />
           <div className="mx-auto w-full max-w-7xl">

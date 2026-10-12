@@ -6,9 +6,10 @@ const STORAGE_KEY = "ir-cleared-home-redirect"
 
 // `/` used to 308 to `/updates`. Browsers keep that permanent redirect after the
 // server stops sending it, and a hard refresh does not drop it. This page is
-// where those browsers land. Clear-Site-Data on the response wipes the cache,
-// then a full navigation loads `/` again. Two tries cover the case where the
-// cache clear finishes on the second response. The cap avoids a loop.
+// where those browsers land. They are sent to /api/clear-home-cache, whose
+// Clear-Site-Data response wipes the cache and then loads `/` again. Two tries
+// cover the case where the cache clear finishes on the second response. The cap
+// avoids a loop. Delete this whole hack once old 308 caches have aged out.
 export function ClearCachedHomeRedirect() {
   useEffect(() => {
     const navigation = performance.getEntriesByType("navigation")[0]
@@ -24,7 +25,7 @@ export function ClearCachedHomeRedirect() {
     }
 
     sessionStorage.setItem(STORAGE_KEY, String(attempts + 1))
-    window.location.replace("/")
+    window.location.replace("/api/clear-home-cache")
   }, [])
 
   return null
