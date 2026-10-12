@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 
 type DeleteConfirmDialogProps = {
   open: boolean
@@ -29,21 +30,36 @@ export function DeleteConfirmDialog({
 }: DeleteConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="admin">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
+            type="button"
             variant="outline"
+            size="sm"
             onClick={() => onOpenChange(false)}
             disabled={loading}
           >
             Cancel
           </Button>
-          <Button variant="destructive" onClick={onConfirm} disabled={loading}>
-            {loading ? "Deleting..." : "Delete"}
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={onConfirm}
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <Spinner data-icon="inline-start" />
+                Deleting...
+              </>
+            ) : (
+              "Delete"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

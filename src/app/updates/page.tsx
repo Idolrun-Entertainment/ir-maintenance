@@ -1,5 +1,9 @@
+import { ClearCachedHomeRedirect } from "@/components/home/clear-cached-home-redirect"
 import { HomeHero } from "@/components/home/home-hero"
 import { HomeTabs } from "@/components/home/home-tabs"
+import { SiteFooter } from "@/components/landing/site-footer"
+import { SiteHeader } from "@/components/landing/site-header"
+import { getAccountHref } from "@/lib/account-href"
 import { collectContentImages } from "@/lib/blog-content"
 import type { Comment } from "@/lib/types"
 import { blogService } from "@/server/services/blog.service"
@@ -12,6 +16,8 @@ import { faqService } from "@/server/services/faq.service"
 export const revalidate = 300
 
 export default async function Page() {
+  const accountHref = await getAccountHref()
+
   let blogs: {
     id: string
     title: string
@@ -81,11 +87,16 @@ export default async function Page() {
   )
 
   return (
-    <div className="home-page">
-      <div className="home-page__shell">
-        <HomeHero />
-        <HomeTabs blogs={blogs} faqs={faqs} screenshots={screenshots} />
-      </div>
+    <div className="flex min-h-svh flex-col overflow-x-clip bg-black text-white">
+      <ClearCachedHomeRedirect />
+      <SiteHeader accountHref={accountHref} current="updates" />
+      <main className="flex-1 px-3 pb-16 sm:px-5">
+        <div className="mx-auto w-full max-w-7xl">
+          <HomeHero />
+          <HomeTabs blogs={blogs} faqs={faqs} screenshots={screenshots} />
+        </div>
+      </main>
+      <SiteFooter />
     </div>
   )
 }

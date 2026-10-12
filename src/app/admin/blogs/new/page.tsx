@@ -1,8 +1,10 @@
 "use client"
 
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
+import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { BlogForm } from "@/components/admin/blog-form"
 import type { BlogFormValues } from "@/components/admin/blog-form"
 import { api } from "@/lib/api"
@@ -29,14 +31,17 @@ export default function NewBlogPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">New blog</h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Create a new blog post. Add images in the editor to keep them in order with the text.
-        </p>
-      </div>
-
+    <div className="max-w-3xl">
+      <Link
+        href="/admin/blogs"
+        className="text-muted-foreground hover:text-foreground mb-4 inline-flex text-sm motion-safe:transition-colors motion-safe:duration-150"
+      >
+        Back to blogs
+      </Link>
+      <AdminPageHeader
+        title="New blog"
+        description="Create a new blog post. Add images in the editor to keep them in order with the text."
+      />
       <BlogForm submitLabel="Create blog" onSubmit={handleSubmit} />
     </div>
   )

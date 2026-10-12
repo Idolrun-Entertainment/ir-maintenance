@@ -1,3 +1,8 @@
+.blog-content-editor {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
 .blog-content-editor__toolbar {
   display: flex;
   flex-wrap: wrap;

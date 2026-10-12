@@ -51,6 +51,7 @@
     --color-home-sky: var(--bg-sky);
     --color-home-border: var(--border-sky);
     --color-home-navy: var(--bg-blue);
+    --color-brand: #00a5ee;
 }
 
 :root {
@@ -137,180 +138,18 @@
     }
 }
 
-/* Battle Kard home page — Figma 5350:309 */
-.home-page {
-  position: relative;
-  min-height: 100svh;
-  overflow-x: clip;
-  background-color: var(--bg-blue);
-  background-image: radial-gradient(
-    ellipse 70% 42% at 50% 0%,
-    #0a2748 0%,
-    var(--bg-blue) 62%
-  );
-  color: #fff;
+/* Admin only. Public pages keep the root radius. */
+.admin {
+  --radius: 0.375rem;
 }
 
-.home-page__shell {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  width: min(72rem, 100%);
-  min-height: 100svh;
-  margin-inline: auto;
-  padding: 0 0.75rem 2.25rem;
-}
-
-.home-page__main {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  width: 100%;
-  margin-top: -17rem;
-}
-
-.home-page__panels {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  margin-top: 0.7rem;
-}
-
-.home-page__panels > [role="tabpanel"] {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-}
-
-.home-hero {
-  position: relative;
-  z-index: 1;
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  overflow: hidden;
-  background-color: transparent;
-}
-
-.home-hero__inner {
-  position: relative;
-  width: 100%;
-  height: clamp(24rem, 52vw, 36rem);
-}
-
-.home-hero__inner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgb(0 0 0 / 0.2);
-  pointer-events: none;
-}
-
-.home-hero__background {
-  position: absolute;
-  top: -1.25rem;
-  left: 50%;
-  width: auto;
-  max-width: none;
-  height: clamp(18rem, 40vw, 28rem);
-  aspect-ratio: 6120 / 1892;
-  transform: translateX(-50%);
-  object-fit: contain;
-  opacity: 0.68;
-}
-
-.home-hero__brand {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: clamp(3.1rem, 8vw, 4rem);
-  pointer-events: none;
-}
-
-.home-hero__mark {
-  position: absolute;
-  top: 0.65rem;
-  left: max(0.75rem, calc(50% - 36rem + 0.75rem));
-  width: auto;
-  height: clamp(2.6rem, 7vw, 3.4rem);
-  object-fit: contain;
-}
-
-.home-hero__logo {
-  width: auto;
-  height: clamp(8rem, 28vw, 13rem);
-  object-fit: contain;
-  margin-top: 0.15rem;
-}
-
-.home-nav {
-  display: flex;
-  width: min(36rem, 92%);
-  margin-inline: auto;
-  margin-bottom: 1.5rem;
-  min-height: 2.75rem;
-  background-color: var(--bg-sky);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.home-nav::-webkit-scrollbar {
-  display: none;
-}
-
-.home-tab {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 2.75rem;
-  padding: 0.55rem 0.7rem;
-  border: none;
-  background: transparent;
-  color: #fff;
-  font-family: var(--font-condensed), var(--font-sans), sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease;
-}
-
-.home-tab:hover {
-  color: #fff;
-  background-color: rgb(5 12 22 / 0.18);
-}
-
-.home-tab:focus-visible {
-  outline: 2px solid var(--border-sky);
-  outline-offset: -2px;
-}
-
-.home-tab[aria-selected="true"] {
-  color: #fff;
-  background-color: rgb(8 48 96 / 0.42);
-}
-
+/* Updates listing cards */
 .home-panel {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--border-sky);
-  border-radius: 3px;
-  background-color: rgb(5 12 22 / 0.78);
-}
-
-.home-page__panels > [role="tabpanel"] > .home-panel {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
+  border-radius: 2px;
+  background-color: rgb(8 10 14 / 0.92);
 }
 
 .home-panel__texture {
@@ -320,12 +159,6 @@
   opacity: 0.42;
 }
 
-.home-updates {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
 .home-panel__article {
   isolation: isolate;
 }
@@ -333,14 +166,15 @@
 .home-panel__content {
   position: relative;
   z-index: 1;
-  margin-top: 1.75rem;
-  padding: 1.45rem 1.6rem 1.55rem;
+  min-width: 0;
+  padding: 1.4rem 1.55rem 1.6rem;
 }
 
 .home-panel__title {
-  font-size: 1.125rem;
+  overflow-wrap: anywhere;
+  font-size: 1.85rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.15;
   letter-spacing: 0.01em;
 }
 
@@ -349,10 +183,10 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.2rem 0.85rem;
-  margin-top: 0.2rem;
-  color: rgb(255 255 255 / 0.62);
-  font-size: 0.72rem;
-  line-height: 1.3;
+  margin-top: 0.4rem;
+  color: rgb(255 255 255 / 0.55);
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .home-panel__date,
@@ -370,10 +204,11 @@
 }
 
 .home-panel__body {
-  margin-top: 0.7rem;
+  margin-top: 0.9rem;
+  overflow-wrap: anywhere;
   color: rgb(255 255 255 / 0.94);
   font-size: 1rem;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .home-panel__body p {
@@ -750,41 +585,16 @@
 }
 
 @media (max-width: 639px) {
-  .home-page__shell {
-    padding-inline: 0.6rem;
-  }
-
-  .home-hero__mark {
-    left: 0.6rem;
-  }
-
-  .home-page__main {
-    margin-top: -8rem;
-  }
-
-  .home-nav {
-    width: 100%;
-  }
-
-  .home-tab {
-    min-height: 2.5rem;
-    padding: 0.45rem 0.4rem;
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-  }
-
   .home-panel__content {
-    margin-top: 1.25rem;
-    padding: 0.95rem 0.95rem 1.1rem;
+    padding: 1.05rem 1rem 1.2rem;
   }
 
-  .home-hero__inner {
-    height: clamp(20rem, 72vw, 26rem);
+  .home-panel__title {
+    font-size: 1.45rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-tab,
   .home-shot,
   .home-faq__trigger,
   .home-faq__icon {

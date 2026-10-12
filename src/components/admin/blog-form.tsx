@@ -90,7 +90,7 @@ export function BlogForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} className="flex max-w-3xl flex-col gap-6">
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="title">Title</FieldLabel>

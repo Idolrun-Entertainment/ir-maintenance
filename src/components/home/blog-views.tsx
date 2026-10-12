@@ -1,6 +1,5 @@
 "use client"
 
-import { EyeIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { api } from "@/lib/api"
@@ -60,9 +59,7 @@ export function BlogViews({ blogId, initialViews }: BlogViewsProps) {
 
   return (
     <span className="home-panel__views">
-      <EyeIcon className="home-panel__meta-icon" aria-hidden />
-      <span className="sr-only">Views: </span>
-      {views.toLocaleString("en-GB")}
+      {views.toLocaleString("en-GB")} views
     </span>
   )
 }

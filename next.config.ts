@@ -1,6 +1,15 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        // Drops the cached 308 from `/` → `/updates`. See ClearCachedHomeRedirect.
+        source: "/updates",
+        headers: [{ key: "Clear-Site-Data", value: '"cache"' }],
+      },
+    ]
+  },
   images: {
     remotePatterns: [
       {

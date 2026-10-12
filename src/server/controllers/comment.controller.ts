@@ -1,8 +1,9 @@
 import { revalidatePath } from "next/cache"
 import type { NextRequest } from "next/server"
 
-import { TooManyRequestsError, ValidationError } from "@/lib/errors"
+import { TooManyRequestsError } from "@/lib/errors"
 import { handleError, successResponse } from "@/lib/http"
+import { readCappedJson } from "@/lib/read-capped-json"
 import { createCommentSchema } from "@/lib/schemas/comment"
 import { rateLimit } from "@/lib/rate-limit"
 import { paginationQuerySchema } from "@/lib/schemas/common"
@@ -40,7 +41,7 @@ export const commentController = {
       const data = await commentService.delete(id)
 
       // Drop the deleted comment from the ISR-cached home page immediately.
-      revalidatePath("/")
+      revalidatePath("/updates")
 
       return successResponse(data, "Comment deleted successfully")
     } catch (error) {
@@ -59,27 +60,24 @@ export const commentController = {
 
   async create(request: NextRequest, blogId: string) {
     try {
-      const declaredLength = Number(request.headers.get("content-length") ?? 0)
+      // Content-Length can be missing or understated, so the cap is the bytes
+      // actually read. Unauthenticated posts also invalidate the ISR cache for
+      // "/updates"; without a cap a POST loop regenerates that page and fills
+      // it with spam.
+      const json = await readCappedJson(request, MAX_BODY_BYTES)
 
-      if (declaredLength > MAX_BODY_BYTES) {
-        throw new ValidationError("Comment is too large")
-      }
-
-      // Unauthenticated, and every accepted comment invalidates the ISR cache
-      // for "/". Without a cap a POST loop forces the home page to regenerate
-      // continuously and fills it with spam.
       if (!rateLimit(request, "comment", { limit: 5, windowMs: 60_000 })) {
         throw new TooManyRequestsError(
           "Too many comments. Try again in a minute.",
         )
       }
 
-      const body = createCommentSchema.parse(await request.json())
+      const body = createCommentSchema.parse(json)
       const data = await commentService.create(blogId, body)
 
       // The home page is ISR with revalidate = 300; without this a new comment
       // would be invisible to everyone else for up to five minutes.
-      revalidatePath("/")
+      revalidatePath("/updates")
 
       return successResponse(data, "Comment posted successfully", 201)
     } catch (error) {

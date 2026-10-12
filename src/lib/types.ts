@@ -27,6 +27,14 @@ export type AdminComment = Comment & {
   }
 }
 
+export type News = {
+  id: string
+  title: string
+  imageUrl: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 export type Faq = {
   id: string
   question: string

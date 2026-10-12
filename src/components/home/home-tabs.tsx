@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { CalendarIcon, ChevronDownIcon } from "lucide-react"
-import { useCallback, useId, useRef, useState } from "react"
+import { ChevronDownIcon, CircleHelpIcon, ImageIcon, SlidersHorizontalIcon } from "lucide-react"
+import { useId, useMemo, useState } from "react"
 
 import { BlogBody } from "@/components/home/blog-body"
 import { BlogComments } from "@/components/home/blog-comments"
@@ -13,6 +13,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { GooeyNav } from "@/components/ui/gooey-nav"
 import { formatBlogDate } from "@/lib/format-date"
 import { homePanelAssets } from "@/lib/home-assets"
 import type { Comment } from "@/lib/types"
@@ -39,10 +40,12 @@ export type HomeScreenshot = {
 
 type HomeTabId = "updates" | "screenshots" | "faq"
 
-const TABS: { id: HomeTabId; label: string }[] = [
-  { id: "updates", label: "UPDATES" },
-  { id: "screenshots", label: "SCREEN SHOTS" },
-  { id: "faq", label: "F.A.Q" },
+const SECTIONS: HomeTabId[] = ["updates", "screenshots", "faq"]
+
+const SECTION_ITEMS = [
+  { label: "Updates" },
+  { label: "Screen Shots", icon: <ImageIcon /> },
+  { label: "F.A.Q", icon: <CircleHelpIcon /> },
 ]
 
 type HomeTabsProps = {
@@ -51,8 +54,23 @@ type HomeTabsProps = {
   screenshots: HomeScreenshot[]
 }
 
-function UpdatesPanel({ blogs }: { blogs: HomeBlog[] }) {
+type BlogSort = "latest" | "oldest"
+
+function sortBlogs(blogs: HomeBlog[], order: BlogSort) {
+  return [...blogs].sort((left, right) => {
+    const leftTime = Date.parse(left.date)
+    const rightTime = Date.parse(right.date)
+    const delta =
+      (Number.isNaN(leftTime) ? 0 : leftTime) -
+      (Number.isNaN(rightTime) ? 0 : rightTime)
+
+    return order === "oldest" ? delta : -delta
+  })
+}
+
+function UpdatesPanel({ blogs, order }: { blogs: HomeBlog[]; order: BlogSort }) {
   const { blogBackground } = homePanelAssets
+  const sortedBlogs = useMemo(() => sortBlogs(blogs, order), [blogs, order])
 
   if (blogs.length === 0) {
     return (
@@ -63,24 +81,22 @@ function UpdatesPanel({ blogs }: { blogs: HomeBlog[] }) {
   }
 
   return (
-    <div className="home-updates">
-      {blogs.map((blog) => (
+    <div className="flex flex-col gap-3.5">
+      {sortedBlogs.map((blog, index) => (
         <article key={blog.id} className="home-panel home-panel__article">
           <Image
             src={blogBackground.src}
             alt=""
             aria-hidden
             fill
+            loading={index === 0 ? "eager" : "lazy"}
             sizes="(max-width: 768px) 100vw, 72rem"
             className="home-panel__texture"
           />
           <div className="home-panel__content">
             <h2 className="home-panel__title">{blog.title}</h2>
             <p className="home-panel__meta">
-              <span className="home-panel__date">
-                <CalendarIcon className="home-panel__meta-icon" aria-hidden />
-                {formatBlogDate(blog.date)}
-              </span>
+              <time dateTime={blog.date}>{formatBlogDate(blog.date)}</time>
               <BlogViews blogId={blog.id} initialViews={blog.views} />
             </p>
             <BlogBody content={blog.content} />
@@ -235,100 +251,48 @@ function FaqPanel({ faqs }: { faqs: HomeFaq[] }) {
 
 export function HomeTabs({ blogs, faqs, screenshots }: HomeTabsProps) {
   const baseId = useId()
+  const panelId = `${baseId}-panel`
   const [activeTab, setActiveTab] = useState<HomeTabId>("updates")
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const [order, setOrder] = useState<BlogSort>("latest")
 
-  const focusTab = useCallback((index: number) => {
-    tabRefs.current[index]?.focus()
-  }, [])
+  const label = order === "latest" ? "Latest" : "Oldest"
+  const nextOrder: BlogSort = order === "latest" ? "oldest" : "latest"
+  const activeIndex = Math.max(0, SECTIONS.indexOf(activeTab))
 
-  function handleTabKeyDown(
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    index: number,
-  ) {
-    let nextIndex = index
-
-    switch (event.key) {
-      case "ArrowRight":
-        nextIndex = (index + 1) % TABS.length
-        break
-      case "ArrowLeft":
-        nextIndex = (index - 1 + TABS.length) % TABS.length
-        break
-      case "Home":
-        nextIndex = 0
-        break
-      case "End":
-        nextIndex = TABS.length - 1
-        break
-      default:
-        return
-    }
-
-    event.preventDefault()
-    setActiveTab(TABS[nextIndex].id)
-    focusTab(nextIndex)
-  }
+  const panelLabel =
+    activeTab === "screenshots" ? "Screen shots" : activeTab === "faq" ? "F.A.Q" : "Updates"
 
   return (
-    <div className="home-page__main">
-      <div
-        role="tablist"
-        aria-label="Battle Kards sections"
-        className="home-nav"
-      >
-        {TABS.map((tab, index) => {
-          const tabId = `${baseId}-tab-${tab.id}`
-          const panelId = `${baseId}-panel-${tab.id}`
+    <div className="mt-3 flex flex-col gap-3 sm:mt-4">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+        <GooeyNav
+          aria-label="Updates sections"
+          items={SECTION_ITEMS}
+          value={activeIndex}
+          onChange={(index) => {
+            const next = SECTIONS[index]
+            if (next) setActiveTab(next)
+          }}
+          activeColor="#00A5EE"
+          className="max-w-full"
+          radius={4}
+        />
 
-          return (
-            <button
-              key={tab.id}
-              ref={(element) => {
-                tabRefs.current[index] = element
-              }}
-              type="button"
-              role="tab"
-              id={tabId}
-              aria-selected={activeTab === tab.id}
-              aria-controls={panelId}
-              tabIndex={activeTab === tab.id ? 0 : -1}
-              className="home-tab"
-              onClick={() => setActiveTab(tab.id)}
-              onKeyDown={(event) => handleTabKeyDown(event, index)}
-            >
-              {tab.label}
-            </button>
-          )
-        })}
+        <button
+          type="button"
+          className="ml-auto inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-sm bg-white px-3.5 py-2 text-xs leading-4 font-medium whitespace-nowrap text-neutral-950 transition-colors duration-150 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6edefe] motion-reduce:transition-none"
+          aria-label={`${label}. Show ${nextOrder} blogs first`}
+          onClick={() => setOrder(nextOrder)}
+        >
+          <SlidersHorizontalIcon className="size-3 shrink-0" aria-hidden />
+          {label}
+        </button>
       </div>
 
-      <div className="home-page__panels">
-        {TABS.map((tab) => {
-          const tabId = `${baseId}-tab-${tab.id}`
-          const panelId = `${baseId}-panel-${tab.id}`
-          const isActive = activeTab === tab.id
-
-          if (!isActive) {
-            return null
-          }
-
-          return (
-            <div
-              key={tab.id}
-              role="tabpanel"
-              id={panelId}
-              aria-labelledby={tabId}
-              tabIndex={0}
-            >
-              {tab.id === "updates" ? <UpdatesPanel blogs={blogs} /> : null}
-              {tab.id === "screenshots" ? (
-                <ScreenshotsPanel screenshots={screenshots} />
-              ) : null}
-              {tab.id === "faq" ? <FaqPanel faqs={faqs} /> : null}
-            </div>
-          )
-        })}
+      <div id={panelId} role="region" aria-label={panelLabel}>
+        {activeTab === "updates" ? <UpdatesPanel blogs={blogs} order={order} /> : null}
+        {activeTab === "screenshots" ? <ScreenshotsPanel screenshots={screenshots} /> : null}
+        {activeTab === "faq" ? <FaqPanel faqs={faqs} /> : null}
       </div>
     </div>
   )

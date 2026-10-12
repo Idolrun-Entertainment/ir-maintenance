@@ -194,7 +194,7 @@ export function BlogContentEditor({
     <EditorContext.Provider value={{ editor }}>
       <div
         className={cn(
-          "blog-content-editor rounded-2xl border border-border bg-background",
+          "blog-content-editor border border-border bg-background",
           disabled && "pointer-events-none opacity-60",
         )}
       >

@@ -41,7 +41,7 @@ export const faqController = {
       await requireAdmin({ mode: "api" })
       const body = createFaqSchema.parse(await request.json())
       const data = await faqService.create(body)
-      revalidatePath("/")
+      revalidatePath("/updates")
       return successResponse(data, "FAQ created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -53,7 +53,7 @@ export const faqController = {
       await requireAdmin({ mode: "api" })
       const body = updateFaqSchema.parse(await request.json())
       const data = await faqService.update(id, body)
-      revalidatePath("/")
+      revalidatePath("/updates")
       return successResponse(data, "FAQ updated successfully")
     } catch (error) {
       return handleError(error)
@@ -64,7 +64,7 @@ export const faqController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await faqService.delete(id)
-      revalidatePath("/")
+      revalidatePath("/updates")
       return successResponse(data, "FAQ deleted successfully")
     } catch (error) {
       return handleError(error)

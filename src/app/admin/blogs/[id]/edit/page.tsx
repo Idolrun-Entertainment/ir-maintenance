@@ -1,9 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
+import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import {
   BlogForm,
   blogToFormValues,
@@ -92,7 +94,7 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex max-w-3xl flex-col gap-4">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-64 w-full" />
       </div>
@@ -108,13 +110,17 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Edit blog</h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Update blog content. Images in the editor stay in the order you add them.
-        </p>
-      </div>
+    <div className="max-w-3xl">
+      <Link
+        href="/admin/blogs"
+        className="text-muted-foreground hover:text-foreground mb-4 inline-flex text-sm motion-safe:transition-colors motion-safe:duration-150"
+      >
+        Back to blogs
+      </Link>
+      <AdminPageHeader
+        title="Edit blog"
+        description="Update blog content. Images in the editor stay in the order you add them."
+      />
 
       <BlogForm
         initialValues={blogToFormValues(blog)}

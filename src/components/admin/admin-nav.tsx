@@ -8,15 +8,20 @@ import { cn } from "@/lib/utils"
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/blogs", label: "Blogs" },
+  { href: "/admin/news", label: "News" },
   { href: "/admin/faqs", label: "FAQs" },
   { href: "/admin/comments", label: "Comments" },
 ]
 
-export function AdminNav() {
+type AdminNavProps = {
+  onNavigate?: () => void
+}
+
+export function AdminNav({ onNavigate }: AdminNavProps) {
   const pathname = usePathname()
 
   return (
-    <nav className="flex flex-col gap-1">
+    <nav aria-label="Admin" className="flex flex-col gap-1">
       {navItems.map((item) => {
         const isActive =
           item.href === "/admin"
@@ -27,11 +32,13 @@ export function AdminNav() {
           <Link
             key={item.href}
             href={item.href}
+            aria-current={isActive ? "page" : undefined}
+            onClick={onNavigate}
             className={cn(
-              "rounded-xl px-3 py-2 text-sm font-medium transition-colors",
+              "border-l-2 px-3 py-2 text-sm motion-safe:transition-colors motion-safe:duration-150",
               isActive
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ? "border-brand font-medium text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
             {item.label}

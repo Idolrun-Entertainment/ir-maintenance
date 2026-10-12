@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 
+import { AdminPageHeader } from "@/components/admin/admin-page-header"
 import { DeleteConfirmDialog } from "@/components/admin/delete-confirm-dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -164,145 +165,150 @@ export default function AdminFaqsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">FAQs</h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Manage frequently asked questions.
-          </p>
-        </div>
-        <Button onClick={startCreate}>Add FAQ</Button>
-      </div>
-
-      <Input
-        placeholder="Search FAQs..."
-        value={search}
-        onChange={(event) => {
-          setSearch(event.target.value)
-          setLoading(true)
-        }}
+    <div className="min-w-0">
+      <AdminPageHeader
+        title="FAQs"
+        description="Manage frequently asked questions."
+        actions={<Button onClick={startCreate}>Add FAQ</Button>}
       />
 
-      {error ? (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      ) : null}
-
-      {editingId ? (
-        <div className="rounded-xl border p-4">
-          <h2 className="mb-4 text-lg font-medium">
-            {editingId === "new" ? "New FAQ" : "Edit FAQ"}
-          </h2>
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="faq-question">Question</FieldLabel>
-              <Input
-                id="faq-question"
-                value={draft.question}
-                onChange={(event) =>
-                  setDraft((current) => ({
-                    ...current,
-                    question: event.target.value,
-                  }))
-                }
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="faq-answer">Answer</FieldLabel>
-              <Textarea
-                id="faq-answer"
-                value={draft.answer}
-                onChange={(event) =>
-                  setDraft((current) => ({
-                    ...current,
-                    answer: event.target.value,
-                  }))
-                }
-                rows={4}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="faq-order">Order</FieldLabel>
-              <Input
-                id="faq-order"
-                type="number"
-                min={0}
-                value={draft.order}
-                onChange={(event) =>
-                  setDraft((current) => ({
-                    ...current,
-                    order: Number(event.target.value),
-                  }))
-                }
-              />
-            </Field>
-          </FieldGroup>
-          <div className="mt-4 flex gap-2">
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? "Saving..." : "Save"}
-            </Button>
-            <Button variant="outline" onClick={cancelEdit} disabled={saving}>
-              Cancel
-            </Button>
-          </div>
+      <div className="flex flex-col gap-6">
+        <div className="max-w-sm">
+          <label htmlFor="faq-search" className="sr-only">
+            Search FAQs
+          </label>
+          <Input
+            id="faq-search"
+            type="search"
+            placeholder="Search FAQs..."
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value)
+              setLoading(true)
+            }}
+          />
         </div>
-      ) : null}
 
-      <div className="rounded-xl border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Order</TableHead>
-              <TableHead>Question</TableHead>
-              <TableHead>Answer</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading
-              ? Array.from({ length: 5 }).map((_, index) => (
-                  <TableRow key={index}>
-                    <TableCell colSpan={4}>
-                      <Skeleton className="h-6 w-full" />
-                    </TableCell>
-                  </TableRow>
-                ))
-              : faqs.map((faq) => (
-                  <TableRow key={faq.id}>
-                    <TableCell>{faq.order}</TableCell>
-                    <TableCell className="font-medium">{faq.question}</TableCell>
-                    <TableCell className="max-w-md truncate">{faq.answer}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => startEdit(faq)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => setDeleteTarget(faq)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            {!loading && faqs.length === 0 ? (
+        {error ? (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : null}
+
+        {editingId ? (
+          <div className="rounded-md border p-4">
+            <h2 className="mb-4 text-base font-medium">
+              {editingId === "new" ? "New FAQ" : "Edit FAQ"}
+            </h2>
+            <FieldGroup className="gap-4">
+              <Field>
+                <FieldLabel htmlFor="faq-question">Question</FieldLabel>
+                <Input
+                  id="faq-question"
+                  value={draft.question}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      question: event.target.value,
+                    }))
+                  }
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="faq-answer">Answer</FieldLabel>
+                <Textarea
+                  id="faq-answer"
+                  value={draft.answer}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      answer: event.target.value,
+                    }))
+                  }
+                  rows={4}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="faq-order">Order</FieldLabel>
+                <Input
+                  id="faq-order"
+                  type="number"
+                  min={0}
+                  value={draft.order}
+                  onChange={(event) =>
+                    setDraft((current) => ({
+                      ...current,
+                      order: Number(event.target.value),
+                    }))
+                  }
+                />
+              </Field>
+            </FieldGroup>
+            <div className="mt-4 flex justify-end gap-2">
+              <Button variant="outline" onClick={cancelEdit} disabled={saving}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave} disabled={saving}>
+                {saving ? "Saving..." : "Save"}
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
+        <div className="min-w-0 overflow-hidden rounded-md border">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4} className="text-muted-foreground py-8 text-center">
-                  No FAQs found.
-                </TableCell>
+                <TableHead>Order</TableHead>
+                <TableHead>Question</TableHead>
+                <TableHead>Answer</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ) : null}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {loading
+                ? Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell colSpan={4}>
+                        <Skeleton className="h-6 w-full" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : faqs.map((faq) => (
+                    <TableRow key={faq.id}>
+                      <TableCell className="tabular-nums">{faq.order}</TableCell>
+                      <TableCell className="font-medium">{faq.question}</TableCell>
+                      <TableCell className="max-w-md truncate">{faq.answer}</TableCell>
+                      <TableCell className="text-right whitespace-nowrap">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => startEdit(faq)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setDeleteTarget(faq)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              {!loading && faqs.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-muted-foreground py-8 text-center">
+                    No FAQs found.
+                  </TableCell>
+                </TableRow>
+              ) : null}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <DeleteConfirmDialog

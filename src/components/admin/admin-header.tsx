@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { ThemeToggle } from "@/components/admin/theme-toggle"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { authClient } from "@/lib/auth-client"
@@ -41,22 +42,21 @@ export function AdminHeader({ user }: AdminHeaderProps) {
   }
 
   return (
-    <div className="mb-6 flex items-center justify-end gap-4 border-b pb-4">
-      <div className="flex items-center mr-4">
-
-        <ThemeToggle />
-      </div>
-      <div className="flex items-center gap-3">
- 
-        <div className="text-right">
-          <p className="text-xs font-medium">{user.name}</p>
-          <p className="text-muted-foreground text-xs">{user.email}</p>
+    <div className="mb-6 flex items-center justify-end gap-3 border-b pb-4">
+      <ThemeToggle />
+      <div className="flex min-w-0 items-center gap-3">
+        <Avatar>
+          {user.image ? <AvatarImage src={user.image} alt="" /> : null}
+          <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+        </Avatar>
+        <div className="min-w-0 text-right">
+          <p className="truncate text-sm font-medium">{user.name}</p>
+          <p className="text-muted-foreground truncate text-xs">{user.email}</p>
         </div>
       </div>
       <Button
         type="button"
         variant="outline"
-        size="lg"
         disabled={signingOut}
         onClick={handleSignOut}
       >

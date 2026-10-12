@@ -49,7 +49,7 @@ export const blogController = {
   },
 
   // Public and unauthenticated by design. Deliberately does NOT call
-  // revalidatePath("/") -- that would regenerate the home page on every visit.
+  // revalidatePath("/updates") -- that would regenerate the home page on every visit.
   async incrementViews(request: NextRequest, id: string) {
     try {
       // Dedup is per browser, not per IP: readers sharing one office NAT are
@@ -89,7 +89,7 @@ export const blogController = {
       await requireAdmin({ mode: "api" })
       const body = createBlogSchema.parse(await request.json())
       const data = await blogService.create(body)
-      revalidatePath("/")
+      revalidatePath("/updates")
       return successResponse(data, "Blog created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -101,7 +101,7 @@ export const blogController = {
       await requireAdmin({ mode: "api" })
       const body = updateBlogSchema.parse(await request.json())
       const data = await blogService.update(id, body)
-      revalidatePath("/")
+      revalidatePath("/updates")
       return successResponse(data, "Blog updated successfully")
     } catch (error) {
       return handleError(error)
@@ -112,7 +112,7 @@ export const blogController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await blogService.delete(id)
-      revalidatePath("/")
+      revalidatePath("/updates")
       return successResponse(data, "Blog deleted successfully")
     } catch (error) {
       return handleError(error)
