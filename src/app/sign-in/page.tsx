@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 
 import { SignInForm } from "@/components/auth/sign-in-form"
+import styles from "@/components/auth/sign-in.module.css"
 
 type SignInPageProps = {
   searchParams: Promise<{ error?: string }>
@@ -14,8 +15,8 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-6">
+    <main className={styles.stage}>
       <SignInForm showAccessDeniedError={error === "access_denied"} />
-    </div>
+    </main>
   )
 }
