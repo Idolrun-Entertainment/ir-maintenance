@@ -13,6 +13,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { UploadThingDropzone } from "@/components/ui/uploadthing-dropzone"
 import { isAllowedNewsImageUrl } from "@/lib/news-image"
 import { createNewsSchema } from "@/lib/schemas/news"
 import { uploadBlogImage } from "@/lib/upload-blog-image"
@@ -26,6 +27,7 @@ type NewsFormValues = {
 type NewsFormProps = {
   initialValues?: Partial<NewsFormValues>
   submitLabel: string
+  showImageUrl?: boolean
   onSubmit: (values: NewsFormValues) => Promise<void>
 }
 
@@ -52,36 +54,17 @@ function validateNewsForm(title: string, imageUrl: string): FormErrors {
   }
 }
 
-export function NewsForm({ initialValues, submitLabel, onSubmit }: NewsFormProps) {
+export function NewsForm({
+  initialValues,
+  submitLabel,
+  showImageUrl = true,
+  onSubmit,
+}: NewsFormProps) {
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [imageUrl, setImageUrl] = useState(initialValues?.imageUrl ?? "")
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
-
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0]
-    event.target.value = ""
-
-    if (!file) {
-      return
-    }
-
-    setUploading(true)
-
-    try {
-      const uploaded = await uploadBlogImage(file)
-      setImageUrl(uploaded.imageUrl)
-      setErrors((current) => ({ ...current, imageUrl: undefined }))
-    } catch (uploadError) {
-      const message =
-        uploadError instanceof Error ? uploadError.message : "Image upload failed"
-      toast.error(message)
-      setErrors((current) => ({ ...current, imageUrl: message }))
-    } finally {
-      setUploading(false)
-    }
-  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -136,63 +119,93 @@ export function NewsForm({ initialValues, submitLabel, onSubmit }: NewsFormProps
           <FieldError id="news-title-error" errors={[{ message: errors.title }]} />
         </Field>
 
-        <Field data-invalid={errors.imageUrl ? true : undefined}>
+        <Field data-invalid={!showImageUrl && errors.imageUrl ? true : undefined}>
           <FieldLabel htmlFor="news-image-file">Image</FieldLabel>
-          <Input
-            id="news-image-file"
-            type="file"
-            accept="image/jpeg,image/png,image/gif,image/webp"
-            onChange={handleFileChange}
-            disabled={busy}
-            aria-invalid={errors.imageUrl ? true : undefined}
-            aria-describedby={
-              errors.imageUrl
+          <UploadThingDropzone
+            inputId="news-image-file"
+            describedBy={
+              !showImageUrl && errors.imageUrl
                 ? "news-image-file-hint news-image-file-error"
                 : "news-image-file-hint"
             }
-          />
-          <FieldDescription id="news-image-file-hint">
-            Optional. Uploading an image fills the URL below.
-          </FieldDescription>
-          <FieldError
-            id="news-image-file-error"
-            errors={[{ message: errors.imageUrl }]}
-          />
-        </Field>
-
-        <Field data-invalid={errors.imageUrl ? true : undefined}>
-          <FieldLabel htmlFor="news-image-url">Image URL</FieldLabel>
-          <Input
-            id="news-image-url"
-            type="url"
-            inputMode="url"
-            value={imageUrl}
-            placeholder="https://"
-            onChange={(event) => {
-              const nextUrl = event.target.value
-              setImageUrl(nextUrl)
-
-              if (errors.imageUrl && !validateNewsForm(title, nextUrl).imageUrl) {
+            accept="image/*"
+            maxFiles={1}
+            maxSize={5 * 1024 * 1024}
+            disabled={submitting}
+            onUploadingChange={setUploading}
+            onFilesChange={(files) => {
+              setImageUrl(files[0]?.url ?? "")
+              if (files[0]?.url) {
                 setErrors((current) => ({ ...current, imageUrl: undefined }))
               }
             }}
-            aria-invalid={errors.imageUrl ? true : undefined}
-            aria-describedby={
-              errors.imageUrl ? "news-image-url-hint news-image-url-error" : "news-image-url-hint"
-            }
-            disabled={busy}
+            onUpload={async (files) => {
+              const file = files[0]
+              if (!file) return []
+              if (!file.type.startsWith("image/")) {
+                throw new Error("Only image files are allowed")
+              }
+              const uploaded = await uploadBlogImage(file)
+              return [
+                {
+                  name: file.name,
+                  size: file.size,
+                  type: file.type,
+                  url: uploaded.imageUrl,
+                },
+              ]
+            }}
           />
-          <FieldDescription id="news-image-url-hint">
-            Leave blank to publish without an image. Cloudinary and placehold.co only.
+          <FieldDescription id="news-image-file-hint">
+            {showImageUrl
+              ? "Optional. Uploading an image fills the URL below."
+              : "Optional. Leave this empty to publish without an image."}
           </FieldDescription>
-          <FieldError
-            id="news-image-url-error"
-            errors={[{ message: errors.imageUrl }]}
-          />
+          {showImageUrl ? null : (
+            <FieldError
+              id="news-image-file-error"
+              errors={[{ message: errors.imageUrl }]}
+            />
+          )}
         </Field>
+
+        {showImageUrl ? (
+          <Field data-invalid={errors.imageUrl ? true : undefined}>
+            <FieldLabel htmlFor="news-image-url">Image URL</FieldLabel>
+            <Input
+              id="news-image-url"
+              type="url"
+              inputMode="url"
+              value={imageUrl}
+              placeholder="https://"
+              onChange={(event) => {
+                const nextUrl = event.target.value
+                setImageUrl(nextUrl)
+
+                if (errors.imageUrl && !validateNewsForm(title, nextUrl).imageUrl) {
+                  setErrors((current) => ({ ...current, imageUrl: undefined }))
+                }
+              }}
+              aria-invalid={errors.imageUrl ? true : undefined}
+              aria-describedby={
+                errors.imageUrl
+                  ? "news-image-url-hint news-image-url-error"
+                  : "news-image-url-hint"
+              }
+              disabled={busy}
+            />
+            <FieldDescription id="news-image-url-hint">
+              Leave blank to publish without an image. Cloudinary and placehold.co only.
+            </FieldDescription>
+            <FieldError
+              id="news-image-url-error"
+              errors={[{ message: errors.imageUrl }]}
+            />
+          </Field>
+        ) : null}
       </FieldGroup>
 
-      {previewUrl ? (
+      {showImageUrl && previewUrl ? (
         <div className="flex flex-col gap-3">
           <p className="text-sm font-medium">Preview</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}

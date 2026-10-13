@@ -39,7 +39,11 @@ export default function NewNewsPage() {
         title="New news"
         description="Add a news item. Title is required. An image is optional."
       />
-      <NewsForm submitLabel="Create news" onSubmit={handleSubmit} />
+      <NewsForm
+        submitLabel="Create news"
+        showImageUrl={false}
+        onSubmit={handleSubmit}
+      />
     </div>
   )
 }
