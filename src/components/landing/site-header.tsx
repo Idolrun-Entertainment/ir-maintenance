@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Menu, User, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { useState } from "react"
 
 import { UkFlag } from "@/components/landing/uk-flag"
@@ -83,10 +83,6 @@ export function SiteHeader({ current = "game" }: SiteHeaderProps) {
               <UkFlag />
               English
             </span>
-            <Link href="/admin" className="flex items-center gap-2 text-white transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand motion-reduce:transition-none">
-              <User className="size-5" aria-hidden />
-              Account
-            </Link>
           </div>
 
           <button
@@ -128,14 +124,6 @@ export function SiteHeader({ current = "game" }: SiteHeaderProps) {
             <UkFlag />
             English
           </span>
-          <Link
-            href="/admin"
-            className="flex items-center gap-2 text-[15px] font-medium text-white transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand motion-reduce:transition-none"
-            onClick={() => setOpen(false)}
-          >
-            <User className="size-5" aria-hidden />
-            Account
-          </Link>
         </div>
       ) : null}
     </header>
