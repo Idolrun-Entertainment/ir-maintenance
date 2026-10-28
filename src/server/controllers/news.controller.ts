@@ -10,6 +10,7 @@ import {
 } from "@/lib/schemas/news"
 import { requireAdmin } from "@/lib/require-admin"
 import { newsService } from "@/server/services/news.service"
+import { queueAndProcess } from "@/server/translation"
 
 function parseListQuery(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -19,6 +20,11 @@ function parseListQuery(request: NextRequest) {
     limit: searchParams.get("limit") ?? undefined,
     search: searchParams.get("search") ?? undefined,
   })
+}
+
+function revalidateNewsPages() {
+  revalidatePath("/")
+  revalidatePath("/[locale]", "page")
 }
 
 export const newsController = {
@@ -45,7 +51,8 @@ export const newsController = {
       await requireAdmin({ mode: "api" })
       const body = createNewsSchema.parse(await request.json())
       const data = await newsService.create(body)
-      revalidatePath("/")
+      revalidateNewsPages()
+      queueAndProcess("news", data.id)
       return successResponse(data, "News created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -58,7 +65,8 @@ export const newsController = {
       const newsId = newsIdSchema.parse(id)
       const body = updateNewsSchema.parse(await request.json())
       const data = await newsService.update(newsId, body)
-      revalidatePath("/")
+      revalidateNewsPages()
+      queueAndProcess("news", newsId)
       return successResponse(data, "News updated successfully")
     } catch (error) {
       return handleError(error)
@@ -69,7 +77,7 @@ export const newsController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await newsService.delete(newsIdSchema.parse(id))
-      revalidatePath("/")
+      revalidateNewsPages()
       return successResponse(data, "News deleted successfully")
     } catch (error) {
       return handleError(error)

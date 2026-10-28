@@ -1,0 +1,82 @@
+import type { Dictionary } from "./en"
+
+export const ja: Dictionary = {
+  meta: {
+    homeTitle: "Idolrun Entertainment - Battle Kards",
+    homeDescription:
+      "Idolrun Entertainmentが贈る『Battle Kards』は、栄光をかけて戦うターン制MMOカードゲームです。",
+    updatesTitle: "アップデート - Idolrun Entertainment",
+    updatesDescription:
+      "Idolrun Entertainmentの『Battle Kards』の最新アップデート、スクリーンショット、FAQ。",
+  },
+  nav: {
+    primary: "メインナビゲーション",
+    home: "Idolrun Entertainment",
+    game: "ゲーム",
+    updates: "アップデート",
+    community: "コミュニティ",
+    comingSoon: "近日公開",
+    openMenu: "メニューを開く",
+    closeMenu: "メニューを閉じる",
+    language: "言語",
+  },
+  footer: {
+    about: "会社概要",
+    support: "サポート",
+    contact: "お問い合わせ",
+    privacy: "プライバシーポリシー",
+    terms: "利用規約",
+    legal: "法的情報",
+    cookies: "Cookieポリシー",
+    copyright:
+      "©2026 Idolrun Entertainment, Inc. 本ページに記載されている商標は、それぞれの所有者に帰属します",
+    paymentPartners: "決済パートナー",
+  },
+  home: {
+    ourGames: "ゲーム",
+    heroAlt: "黒い背景の前に立つ3体の鎧をまとった人物",
+    tagline: "栄光をかけて戦うターン制MMOカードゲーム",
+    comingSoonButton: "近日公開",
+    recentNews: "最新ニュース",
+    newsUnavailable: "現在ニュースを表示できません。",
+    newsEmpty: "ニュースはまだありません。しばらくしてからご確認ください。",
+  },
+  updates: {
+    heading: "アップデート",
+    sectionsLabel: "アップデートのセクション",
+    tabUpdates: "アップデート",
+    tabScreenshots: "スクリーンショット",
+    tabFaq: "FAQ",
+    panelScreenshots: "スクリーンショット",
+    latest: "新しい順",
+    oldest: "古い順",
+    sortLabel: "{current}。{next}で表示する",
+    emptyUpdates: "アップデートはまだありません。しばらくしてからご確認ください。",
+    emptyScreenshots: "スクリーンショットはまだありません。",
+    emptyFaq: "FAQはまだありません。",
+    screenshotPreview: "スクリーンショットのプレビュー",
+    screenshotEnlarged: "拡大したスクリーンショットのプレビュー",
+    views: "{count} 回表示",
+    permalink: "固定リンク",
+    backToUpdates: "アップデート一覧へ戻る",
+  },
+  comments: {
+    label: "コメント",
+    heading: "コメント ({count})",
+    shareToggle: "ご意見をお寄せください",
+    nameLabel: "名前（任意）",
+    anonymous: "匿名",
+    commentLabel: "コメント",
+    placeholder: "ご意見をお寄せください",
+    posting: "投稿中...",
+    submit: "コメントを投稿",
+    posted: "コメントを投稿しました",
+    failed: "コメントを投稿できませんでした",
+    invalid: "コメントが無効です",
+    empty: "まだコメントはありません。最初のコメントを投稿しましょう。",
+  },
+  fallback: {
+    notTranslated:
+      "この記事はまだ{language}に翻訳されていません。英語の原文を表示しています。",
+  },
+}

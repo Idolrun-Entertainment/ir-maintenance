@@ -9,6 +9,12 @@ import {
 import { paginationQuerySchema } from "@/lib/schemas/common"
 import { requireAdmin } from "@/lib/require-admin"
 import { faqService } from "@/server/services/faq.service"
+import { queueAndProcess } from "@/server/translation"
+
+function revalidateFaqPages() {
+  revalidatePath("/updates")
+  revalidatePath("/[locale]/updates", "page")
+}
 
 export const faqController = {
   async list(request: NextRequest) {
@@ -41,7 +47,8 @@ export const faqController = {
       await requireAdmin({ mode: "api" })
       const body = createFaqSchema.parse(await request.json())
       const data = await faqService.create(body)
-      revalidatePath("/updates")
+      revalidateFaqPages()
+      queueAndProcess("faq", data.id)
       return successResponse(data, "FAQ created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -53,7 +60,8 @@ export const faqController = {
       await requireAdmin({ mode: "api" })
       const body = updateFaqSchema.parse(await request.json())
       const data = await faqService.update(id, body)
-      revalidatePath("/updates")
+      revalidateFaqPages()
+      queueAndProcess("faq", id)
       return successResponse(data, "FAQ updated successfully")
     } catch (error) {
       return handleError(error)
@@ -64,7 +72,7 @@ export const faqController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await faqService.delete(id)
-      revalidatePath("/updates")
+      revalidateFaqPages()
       return successResponse(data, "FAQ deleted successfully")
     } catch (error) {
       return handleError(error)

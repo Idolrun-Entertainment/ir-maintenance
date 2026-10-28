@@ -1,0 +1,82 @@
+import type { Dictionary } from "./en"
+
+export const id: Dictionary = {
+  meta: {
+    homeTitle: "Idolrun Entertainment - Battle Kards",
+    homeDescription:
+      "Idolrun Entertainment menghadirkan Battle Kards, game kartu MMO berbasis giliran di mana pemain bertarung demi kejayaan.",
+    updatesTitle: "Pembaruan - Idolrun Entertainment",
+    updatesDescription:
+      "Pembaruan terbaru, tangkapan layar, dan FAQ Battle Kards dari Idolrun Entertainment.",
+  },
+  nav: {
+    primary: "Navigasi utama",
+    home: "Idolrun Entertainment",
+    game: "Game",
+    updates: "Pembaruan",
+    community: "Komunitas",
+    comingSoon: "Segera hadir",
+    openMenu: "Buka menu",
+    closeMenu: "Tutup menu",
+    language: "Bahasa",
+  },
+  footer: {
+    about: "Tentang",
+    support: "Dukungan",
+    contact: "Kontak",
+    privacy: "Kebijakan Privasi",
+    terms: "Ketentuan",
+    legal: "Hukum",
+    cookies: "Kebijakan Cookie",
+    copyright:
+      "©2026 Idolrun Entertainment, Inc. Semua merek dagang yang disebutkan di sini adalah milik pemiliknya masing-masing",
+    paymentPartners: "Mitra pembayaran kami",
+  },
+  home: {
+    ourGames: "GAME KAMI",
+    heroAlt: "Tiga sosok berbaju zirah berdiri di depan latar belakang hitam",
+    tagline: "Game kartu MMO berbasis giliran di mana pemain bertarung demi kejayaan",
+    comingSoonButton: "SEGERA HADIR",
+    recentNews: "BERITA TERBARU",
+    newsUnavailable: "Berita tidak tersedia saat ini.",
+    newsEmpty: "Belum ada berita. Silakan cek kembali nanti.",
+  },
+  updates: {
+    heading: "PEMBARUAN",
+    sectionsLabel: "Bagian pembaruan",
+    tabUpdates: "Pembaruan",
+    tabScreenshots: "Tangkapan Layar",
+    tabFaq: "FAQ",
+    panelScreenshots: "Tangkapan layar",
+    latest: "Terbaru",
+    oldest: "Terlama",
+    sortLabel: "{current}. Tampilkan blog {next} lebih dulu",
+    emptyUpdates: "Belum ada pembaruan. Silakan cek kembali nanti.",
+    emptyScreenshots: "Belum ada tangkapan layar.",
+    emptyFaq: "Belum ada FAQ.",
+    screenshotPreview: "Pratinjau tangkapan layar",
+    screenshotEnlarged: "Pratinjau tangkapan layar yang diperbesar",
+    views: "{count} kali dilihat",
+    permalink: "Tautan permanen",
+    backToUpdates: "Kembali ke pembaruan",
+  },
+  comments: {
+    label: "Komentar",
+    heading: "Komentar ({count})",
+    shareToggle: "Bagikan Pendapat Anda",
+    nameLabel: "Nama (opsional)",
+    anonymous: "Anonim",
+    commentLabel: "Komentar",
+    placeholder: "Bagikan pendapat Anda",
+    posting: "Mengirim...",
+    submit: "Kirim komentar",
+    posted: "Komentar terkirim",
+    failed: "Gagal mengirim komentar",
+    invalid: "Komentar tidak valid",
+    empty: "Belum ada komentar. Jadilah yang pertama berkomentar.",
+  },
+  fallback: {
+    notTranslated:
+      "Artikel ini belum tersedia dalam bahasa {language}. Menampilkan versi asli bahasa Inggris.",
+  },
+}

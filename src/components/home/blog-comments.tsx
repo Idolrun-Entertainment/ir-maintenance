@@ -5,6 +5,9 @@ import { useId, useState } from "react"
 import { toast } from "sonner"
 
 import { Spinner } from "@/components/ui/spinner"
+import type { Locale } from "@/i18n/config"
+import type { Dictionary } from "@/i18n/dictionary"
+import { format } from "@/i18n/format"
 import { api } from "@/lib/api"
 import type { ApiResponse } from "@/lib/api"
 import { formatBlogDateShort } from "@/lib/format-date"
@@ -16,9 +19,16 @@ const MAX_COMMENT_LENGTH = 2000
 type BlogCommentsProps = {
   blogId: string
   initialComments: Comment[]
+  locale: Locale
+  labels: Dictionary["comments"]
 }
 
-export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
+export function BlogComments({
+  blogId,
+  initialComments,
+  locale,
+  labels,
+}: BlogCommentsProps) {
   const baseId = useId()
   const [comments, setComments] = useState(initialComments)
   const [name, setName] = useState("")
@@ -40,7 +50,7 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
     })
 
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Comment is invalid")
+      setError(parsed.error.issues[0]?.message ?? labels.invalid)
       return
     }
 
@@ -60,12 +70,12 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
 
       setName("")
       setContent("")
-      toast.success("Comment posted")
+      toast.success(labels.posted)
     } catch (submitError) {
       const message =
         submitError instanceof Error
           ? submitError.message
-          : "Failed to post comment"
+          : labels.failed
       setError(message)
       toast.error(message)
     } finally {
@@ -74,14 +84,14 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
   }
 
   return (
-    <section className="home-comments" aria-label="Comments">
+    <section className="home-comments" aria-label={labels.label}>
       <details className="home-comments__compose">
-        <summary className="home-comments__toggle">Share Your Thoughts</summary>
+        <summary className="home-comments__toggle">{labels.shareToggle}</summary>
 
         <form className="home-comments__form" onSubmit={handleSubmit}>
           <div className="home-comments__row">
             <label className="home-comments__label" htmlFor={nameId}>
-              Name (optional)
+              {labels.nameLabel}
             </label>
             <input
               id={nameId}
@@ -89,14 +99,14 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={80}
-              placeholder="Anonymous"
+              placeholder={labels.anonymous}
               disabled={submitting}
             />
           </div>
 
           <div className="home-comments__row">
             <label className="home-comments__label" htmlFor={contentId}>
-              Comment
+              {labels.commentLabel}
             </label>
             <textarea
               id={contentId}
@@ -111,7 +121,7 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
               }}
               maxLength={MAX_COMMENT_LENGTH}
               rows={3}
-              placeholder="Share your thoughts"
+              placeholder={labels.placeholder}
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? `${baseId}-error` : undefined}
               disabled={submitting}
@@ -136,10 +146,10 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
             {submitting ? (
               <>
                 <Spinner className="size-4" />
-                Posting...
+                {labels.posting}
               </>
             ) : (
-              "Post comment"
+              labels.submit
             )}
           </button>
         </form>
@@ -147,12 +157,12 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
 
       <h3 className="home-comments__heading">
         <MessageSquareIcon className="home-panel__meta-icon" aria-hidden />
-        Comments ({comments.length})
+        {format(labels.heading, { count: comments.length })}
       </h3>
 
       {comments.length === 0 ? (
         <p className="home-comments__empty">
-          No comments yet. Be the first to say something.
+          {labels.empty}
         </p>
       ) : (
         <ul className="home-comments__list">
@@ -161,7 +171,7 @@ export function BlogComments({ blogId, initialComments }: BlogCommentsProps) {
               <p className="home-comments__meta">
                 <span className="home-comments__author">{comment.name}</span>
                 <span className="home-comments__date">
-                  {formatBlogDateShort(comment.createdAt)}
+                  {formatBlogDateShort(comment.createdAt, locale)}
                 </span>
               </p>
               {/* Plain text node: React escapes it, and nothing on this page

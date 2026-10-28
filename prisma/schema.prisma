@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -9,17 +8,18 @@ datasource db {
 }
 
 model Blog {
-  id            String    @id @default(cuid())
+  id            String            @id @default(cuid())
   title         String
-  slug          String    @unique
-  date          DateTime  @db.Date
-  content       String    @db.Text
+  slug          String            @unique
+  date          DateTime          @db.Date
+  content       String            @db.Text
   imageUrl      String
   imagePublicId String
-  views         Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  views         Int               @default(0)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   comments      Comment[]
+  translations  BlogTranslation[]
 }
 
 // Public, unauthenticated comments on a blog. `name` is stored already
@@ -36,20 +36,22 @@ model Comment {
 }
 
 model Faq {
-  id        String   @id @default(cuid())
-  question  String
-  answer    String   @db.Text
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String           @id @default(cuid())
+  question     String
+  answer       String           @db.Text
+  order        Int              @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  translations FaqTranslation[]
 }
 
 model News {
-  id        String   @id @default(cuid())
-  title     String
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String            @id @default(cuid())
+  title        String
+  imageUrl     String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  translations NewsTranslation[]
 }
 
 model User {
@@ -115,4 +117,85 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+enum TranslationJobState {
+  IDLE
+  QUEUED
+  RUNNING
+  FAILED
+}
+
+// One row per (source post, locale). English stays in Blog; the slug is shared.
+model BlogTranslation {
+  id             String  @id @default(cuid())
+  blogId         String
+  blog           Blog    @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  locale         String
+  title          String?
+  content        String? @db.Text
+  seoTitle       String?
+  seoDescription String?
+
+  // Job state. Content columns keep serving the last good translation while a
+  // re-translation is queued or running.
+  translatedHash String?
+  publishedAt    DateTime?
+  jobState       TranslationJobState @default(QUEUED)
+  attempts       Int                 @default(0)
+  nextAttemptAt  DateTime?
+  lockedUntil    DateTime?
+  lastError      String?             @db.Text
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@unique([blogId, locale])
+  @@index([jobState, nextAttemptAt])
+}
+
+model FaqTranslation {
+  id       String  @id @default(cuid())
+  faqId    String
+  faq      Faq     @relation(fields: [faqId], references: [id], onDelete: Cascade)
+  locale   String
+  question String?
+  answer   String? @db.Text
+
+  // Job state. Content columns keep serving the last good translation while a
+  // re-translation is queued or running.
+  translatedHash String?
+  publishedAt    DateTime?
+  jobState       TranslationJobState @default(QUEUED)
+  attempts       Int                 @default(0)
+  nextAttemptAt  DateTime?
+  lockedUntil    DateTime?
+  lastError      String?             @db.Text
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@unique([faqId, locale])
+  @@index([jobState, nextAttemptAt])
+}
+
+model NewsTranslation {
+  id     String  @id @default(cuid())
+  newsId String
+  news   News    @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  locale String
+  title  String?
+
+  // Job state. Content columns keep serving the last good translation while a
+  // re-translation is queued or running.
+  translatedHash String?
+  publishedAt    DateTime?
+  jobState       TranslationJobState @default(QUEUED)
+  attempts       Int                 @default(0)
+  nextAttemptAt  DateTime?
+  lockedUntil    DateTime?
+  lastError      String?             @db.Text
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@unique([newsId, locale])
+  @@index([jobState, nextAttemptAt])
 }

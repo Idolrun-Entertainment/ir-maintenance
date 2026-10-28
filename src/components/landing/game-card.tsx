@@ -1,8 +1,12 @@
 import Image from "next/image"
 
 import { displayFont } from "@/components/landing/display-font"
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config"
+import { getDictionary } from "@/i18n/dictionary"
 
-export function GameCard() {
+export function GameCard({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
+  const { home } = getDictionary(locale)
+
   return (
     <article className="mx-auto mt-4 w-full max-w-[26rem] sm:mx-0">
       <div className="flex items-center justify-center bg-brand px-8 py-7">
@@ -17,7 +21,7 @@ export function GameCard() {
       </div>
       <div className="bg-[#0b2a58] px-8 pt-7 pb-8 text-center">
         <p className="mx-auto max-w-[16rem] text-[15px] leading-6 text-white">
-          A turn based MMO card game where players battle for glory
+          {home.tagline}
         </p>
         <p className="relative mx-auto mt-6 h-[3.05rem] w-56">
           <span className="absolute inset-x-2 inset-y-1.5 rounded-full bg-gradient-to-b from-[#ff8a3d] to-[#d24a14]" />
@@ -31,7 +35,7 @@ export function GameCard() {
           <span
             className={`${displayFont} relative z-10 flex h-full items-center justify-center text-xl font-bold tracking-[0.14em] text-white`}
           >
-            COMING SOON
+            {home.comingSoonButton}
           </span>
         </p>
       </div>

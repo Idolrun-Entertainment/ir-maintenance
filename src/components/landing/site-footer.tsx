@@ -1,6 +1,8 @@
 import Image from "next/image"
 
 import { Separator } from "@/components/ui/separator"
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config"
+import { getDictionary } from "@/i18n/dictionary"
 
 const paymentPartners = [
   { src: "/images/mercury.webp", alt: "Mercury", width: 238, height: 48, className: "h-5 w-auto" },
@@ -36,10 +38,11 @@ const socialLinks = [
   },
 ] as const
 
-const footerNotes = ["Privacy Policy", "Terms", "Legal", "Cookie Policy"]
-const footerLinks = ["About", "Support", "Contact"]
+export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
+  const { footer } = getDictionary(locale)
+  const footerNotes = [footer.privacy, footer.terms, footer.legal, footer.cookies]
+  const footerLinks = [footer.about, footer.support, footer.contact]
 
-export function SiteFooter() {
   return (
     <footer className="relative z-10 mt-10 text-white">
       <div className="mx-auto w-full max-w-7xl px-4 pt-6 pb-8 sm:px-5">
@@ -62,8 +65,7 @@ export function SiteFooter() {
             />
             <div>
               <p className="text-xs leading-5 xl:whitespace-nowrap">
-                ©2026 Idolrun Entertainment, Inc. All trademarks referenced herein are the
-                properties of respective owner
+                {footer.copyright}
               </p>
               <div className="mt-2.5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
                 {footerNotes.map((label) => (
@@ -74,7 +76,7 @@ export function SiteFooter() {
           </div>
 
           <div className="shrink-0">
-            <p className="text-sm">Our payment partners</p>
+            <p className="text-sm">{footer.paymentPartners}</p>
             <div className="mt-2.5 flex flex-wrap items-center gap-x-6 gap-y-3">
               <ul className="flex flex-wrap items-center gap-3">
                 {paymentPartners.map((partner) => (

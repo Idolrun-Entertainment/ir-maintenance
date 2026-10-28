@@ -2,6 +2,10 @@ import type { NextRequest } from "next/server"
 
 import { faqController } from "@/server/controllers/faq.controller"
 
+// Translation runs after the response (see queueAndProcess) and needs Node.
+export const runtime = "nodejs"
+export const maxDuration = 60
+
 type RouteContext = {
   params: Promise<{ id: string }>
 }

@@ -1,13 +1,17 @@
 import Image from "next/image"
 
 import { displayFont } from "@/components/landing/display-font"
+import { DEFAULT_LOCALE, type Locale } from "@/i18n/config"
+import { getDictionary } from "@/i18n/dictionary"
 
-export function GameHero() {
+export function GameHero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
+  const { home } = getDictionary(locale)
+
   return (
     <section className="relative mx-auto mt-2 w-full max-w-7xl" aria-labelledby="our-games-heading">
       <Image
         src="/images/hero-3-black.webp"
-        alt="Three armored figures standing against a black background"
+        alt={home.heroAlt}
         width={3024}
         height={934}
         preload
@@ -18,7 +22,7 @@ export function GameHero() {
         id="our-games-heading"
         className={`${displayFont} absolute bottom-[6%] left-[1%] text-5xl font-extrabold tracking-wide text-white italic sm:text-6xl md:text-7xl lg:text-[5.5rem]`}
       >
-        OUR GAMES
+        {home.ourGames}
       </h1>
     </section>
   )

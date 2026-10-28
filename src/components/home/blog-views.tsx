@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react"
 
+import { LOCALE_META, type Locale } from "@/i18n/config"
+import { format } from "@/i18n/format"
 import { api } from "@/lib/api"
 import type { ApiResponse } from "@/lib/api"
 
@@ -24,9 +26,17 @@ const countedViews = new Map<string, number | null>()
 type BlogViewsProps = {
   blogId: string
   initialViews: number
+  locale: Locale
+  /** Localized "{count} views" template. */
+  template: string
 }
 
-export function BlogViews({ blogId, initialViews }: BlogViewsProps) {
+export function BlogViews({
+  blogId,
+  initialViews,
+  locale,
+  template,
+}: BlogViewsProps) {
   const [views, setViews] = useState(
     () => countedViews.get(blogId) ?? initialViews,
   )
@@ -59,7 +69,7 @@ export function BlogViews({ blogId, initialViews }: BlogViewsProps) {
 
   return (
     <span className="home-panel__views">
-      {views.toLocaleString("en-GB")} views
+      {format(template, { count: views.toLocaleString(LOCALE_META[locale].intl) })}
     </span>
   )
 }

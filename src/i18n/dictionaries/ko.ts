@@ -1,0 +1,82 @@
+import type { Dictionary } from "./en"
+
+export const ko: Dictionary = {
+  meta: {
+    homeTitle: "Idolrun Entertainment - Battle Kards",
+    homeDescription:
+      "Idolrun Entertainment의 Battle Kards는 영광을 위해 싸우는 턴제 MMO 카드 게임입니다.",
+    updatesTitle: "업데이트 - Idolrun Entertainment",
+    updatesDescription:
+      "Idolrun Entertainment의 Battle Kards 최신 업데이트, 스크린샷, FAQ.",
+  },
+  nav: {
+    primary: "주요 탐색",
+    home: "Idolrun Entertainment",
+    game: "게임",
+    updates: "업데이트",
+    community: "커뮤니티",
+    comingSoon: "출시 예정",
+    openMenu: "메뉴 열기",
+    closeMenu: "메뉴 닫기",
+    language: "언어",
+  },
+  footer: {
+    about: "회사 소개",
+    support: "지원",
+    contact: "문의",
+    privacy: "개인정보 처리방침",
+    terms: "이용약관",
+    legal: "법적 고지",
+    cookies: "쿠키 정책",
+    copyright:
+      "©2026 Idolrun Entertainment, Inc. 여기에 언급된 모든 상표는 각 소유자의 자산입니다",
+    paymentPartners: "결제 파트너",
+  },
+  home: {
+    ourGames: "우리의 게임",
+    heroAlt: "검은 배경 앞에 서 있는 갑옷을 입은 세 인물",
+    tagline: "영광을 위해 싸우는 턴제 MMO 카드 게임",
+    comingSoonButton: "출시 예정",
+    recentNews: "최신 뉴스",
+    newsUnavailable: "지금은 뉴스를 불러올 수 없습니다.",
+    newsEmpty: "아직 뉴스가 없습니다. 나중에 다시 확인해 주세요.",
+  },
+  updates: {
+    heading: "업데이트",
+    sectionsLabel: "업데이트 섹션",
+    tabUpdates: "업데이트",
+    tabScreenshots: "스크린샷",
+    tabFaq: "FAQ",
+    panelScreenshots: "스크린샷",
+    latest: "최신순",
+    oldest: "오래된순",
+    sortLabel: "{current}. {next}으로 보기",
+    emptyUpdates: "아직 업데이트가 없습니다. 나중에 다시 확인해 주세요.",
+    emptyScreenshots: "아직 스크린샷이 없습니다.",
+    emptyFaq: "아직 FAQ가 없습니다.",
+    screenshotPreview: "스크린샷 미리보기",
+    screenshotEnlarged: "확대된 스크린샷 미리보기",
+    views: "조회 {count}회",
+    permalink: "고정 링크",
+    backToUpdates: "업데이트 목록으로 돌아가기",
+  },
+  comments: {
+    label: "댓글",
+    heading: "댓글 ({count})",
+    shareToggle: "의견을 남겨 주세요",
+    nameLabel: "이름 (선택)",
+    anonymous: "익명",
+    commentLabel: "댓글",
+    placeholder: "의견을 남겨 주세요",
+    posting: "등록 중...",
+    submit: "댓글 등록",
+    posted: "댓글이 등록되었습니다",
+    failed: "댓글을 등록하지 못했습니다",
+    invalid: "댓글이 올바르지 않습니다",
+    empty: "아직 댓글이 없습니다. 첫 번째 댓글을 남겨 보세요.",
+  },
+  fallback: {
+    notTranslated:
+      "이 글의 {language} 번역본이 아직 없습니다. 영어 원문을 표시합니다.",
+  },
+}

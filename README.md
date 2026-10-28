@@ -19,3 +19,7 @@ To use the components in your app, import them as follows:
 ```tsx
 import { Button } from "@/components/ui/button";
 ```
+
+## Translations
+
+Blog posts, FAQs and news are auto-translated into ja, id, ko and zh-CN. See [docs/translations.md](docs/translations.md) for architecture, Google Cloud (keyless) setup, backfill and operations.

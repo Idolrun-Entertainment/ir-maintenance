@@ -10,6 +10,7 @@ import {
 import { paginationQuerySchema } from "@/lib/schemas/common"
 import { requireAdmin } from "@/lib/require-admin"
 import { blogService } from "@/server/services/blog.service"
+import { queueAndProcess } from "@/server/translation"
 
 // How long one browser's view of a given blog stays counted. Long enough that
 // reloading does not inflate the number, short enough that a genuine return
@@ -21,6 +22,16 @@ const VIEW_COOKIE_PREFIX = "bv_"
 // per listed blog (at most 20), so a reader loading it several times a minute
 // stays well under this, while a script ignoring Set-Cookie is still capped.
 const VIEW_ABUSE_LIMIT = { limit: 120, windowMs: 60_000 }
+
+// English and translated listing + post pages (translations are removed with
+// the post by the FK cascade).
+function revalidateBlogPages() {
+  revalidatePath("/updates")
+  revalidatePath("/updates/[slug]", "page")
+  revalidatePath("/[locale]/updates", "page")
+  revalidatePath("/[locale]/updates/[slug]", "page")
+  revalidatePath("/sitemap.xml")
+}
 
 export const blogController = {
   async list(request: NextRequest) {
@@ -89,7 +100,8 @@ export const blogController = {
       await requireAdmin({ mode: "api" })
       const body = createBlogSchema.parse(await request.json())
       const data = await blogService.create(body)
-      revalidatePath("/updates")
+      revalidateBlogPages()
+      queueAndProcess("blog", data.id)
       return successResponse(data, "Blog created successfully", 201)
     } catch (error) {
       return handleError(error)
@@ -101,7 +113,8 @@ export const blogController = {
       await requireAdmin({ mode: "api" })
       const body = updateBlogSchema.parse(await request.json())
       const data = await blogService.update(id, body)
-      revalidatePath("/updates")
+      revalidateBlogPages()
+      queueAndProcess("blog", id)
       return successResponse(data, "Blog updated successfully")
     } catch (error) {
       return handleError(error)
@@ -112,7 +125,7 @@ export const blogController = {
     try {
       await requireAdmin({ mode: "api" })
       const data = await blogService.delete(id)
-      revalidatePath("/updates")
+      revalidateBlogPages()
       return successResponse(data, "Blog deleted successfully")
     } catch (error) {
       return handleError(error)
