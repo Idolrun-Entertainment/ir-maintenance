@@ -76,7 +76,6 @@ export default function AdminBlogsPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Title</TableHead>
-                <TableHead>Slug</TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Translations</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -86,7 +85,7 @@ export default function AdminBlogsPage() {
               {list.loading
                 ? Array.from({ length: 5 }).map((_, index) => (
                     <TableRow key={index}>
-                      <TableCell colSpan={5}>
+                      <TableCell colSpan={4}>
                         <Skeleton className="h-6 w-full" />
                       </TableCell>
                     </TableRow>
@@ -94,9 +93,6 @@ export default function AdminBlogsPage() {
                 : list.items.map((blog) => (
                     <TableRow key={blog.id}>
                       <TableCell className="font-medium">{blog.title}</TableCell>
-                      <TableCell className="text-muted-foreground font-mono text-xs">
-                        {blog.slug}
-                      </TableCell>
                       <TableCell className="tabular-nums">
                         {formatBlogDateShort(blog.date)}
                       </TableCell>
@@ -132,7 +128,7 @@ export default function AdminBlogsPage() {
                   ))}
               {!list.loading && list.items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-muted-foreground py-8 text-center">
+                  <TableCell colSpan={4} className="text-muted-foreground py-8 text-center">
                     No blogs found.
                   </TableCell>
                 </TableRow>

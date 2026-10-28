@@ -207,15 +207,16 @@ function ScreenshotsPanel({
                 className="home-shot"
                 onClick={() => setSelected(asset)}
               >
-                <div className="home-shot__frame">
-                  <Image
-                    src={asset.src}
-                    alt={asset.alt}
-                    className="home-shot__image"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 22rem"
-                  />
-                </div>
+                {/* Intrinsic size is unknown here, so width/height 0 + CSS auto
+                    lets the file's own aspect ratio size the masonry tile. */}
+                <Image
+                  src={asset.src}
+                  alt={asset.alt}
+                  className="home-shot__image"
+                  width={0}
+                  height={0}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20rem"
+                />
               </button>
             ))}
           </div>
