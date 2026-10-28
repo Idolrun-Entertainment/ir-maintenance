@@ -52,7 +52,7 @@ translation, `/<locale>/updates/<slug>` shows the English text with a notice,
 1. Admin saves a blog/FAQ/news item (existing flow, unchanged). The controller
    queues four rows (a few indexed writes; failures here are logged and never
    fail the save), then uses `after()` to process them once the response is sent.
-2. **Vercel Cron** (`vercel.json`, every 5 min → `GET /api/cron/translations`,
+2. **Vercel Cron** (`vercel.json`, daily at 03:00 UTC → `GET /api/cron/translations`,
    `Authorization: Bearer $CRON_SECRET`) sweeps anything due: scheduled retries,
    rows whose worker died (expired lease), and anything the inline pass missed.
    Vercel Hobby only allows daily crons; use Pro for the 5-minute schedule.
