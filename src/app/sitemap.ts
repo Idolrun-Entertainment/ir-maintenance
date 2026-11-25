@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: Entry[] = [
     ...entriesFor("/", LOCALES),
     ...entriesFor("/updates", LOCALES),
-    // Legal text is English-only; localized copies are noindex, so list English only.
+    // Legal/About/Support text is English-only; localized copies are noindex, so list English only.
     ...LEGAL_SLUGS.flatMap((slug) => entriesFor(`/${slug}`, [])),
   ]
 

@@ -14,6 +14,9 @@ const paymentPartners = [
   { src: "/images/visa-card.webp", alt: "Visa", width: 74, height: 72, className: "h-5 w-auto" },
 ] as const
 
+const footerLinkClass =
+  "transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+
 const socialLinks = [
   {
     src: "/images/x-icon.webp",
@@ -47,15 +50,21 @@ export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
     { label: footer.legal, path: "/legal" },
     { label: footer.cookies, path: "/cookies" },
   ]
-  const footerLinks = [footer.about, footer.support, footer.contact]
+  const footerLinks = [
+    { label: footer.about, path: "/about" },
+    { label: footer.support, path: "/support" },
+  ]
 
   return (
     <footer className="relative z-10 mt-10 text-white">
       <div className="mx-auto w-full max-w-7xl px-4 pt-6 pb-8 sm:px-5">
         <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-          {footerLinks.map((label) => (
-            <span key={label}>{label}</span>
+          {footerLinks.map(({ label, path }) => (
+            <Link key={path} href={localePath(locale, path)} className={footerLinkClass}>
+              {label}
+            </Link>
           ))}
+          <span>{footer.contact}</span>
         </div>
 
         <Separator className="my-5 bg-white/40" />
@@ -78,7 +87,7 @@ export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                   <Link
                     key={path}
                     href={localePath(locale, path)}
-                    className="transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+                    className={footerLinkClass}
                   >
                     {label}
                   </Link>

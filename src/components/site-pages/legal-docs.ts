@@ -1,16 +1,19 @@
 export const CONTACT_EMAIL = "hello@idolrun.com"
 export const LEGAL_UPDATED = "25 November 2026"
 
-export type LegalSlug = "privacy" | "terms" | "legal" | "cookies"
+export type LegalSlug = "privacy" | "terms" | "legal" | "cookies" | "about" | "support"
 
 export type LegalDoc = {
   title: string
   description: string
   intro: string
+  /** Hide "Last updated" (About, Support). */
+  undated?: boolean
+  contactIntro?: string
   sections: { heading: string; paragraphs?: string[]; bullets?: string[] }[]
 }
 
-export const LEGAL_SLUGS = ["privacy", "terms", "legal", "cookies"] as const
+export const LEGAL_SLUGS = ["privacy", "terms", "legal", "cookies", "about", "support"] as const
 
 export const legalDocs: Record<LegalSlug, LegalDoc> = {
   privacy: {
@@ -232,6 +235,92 @@ export const legalDocs: Record<LegalSlug, LegalDoc> = {
         heading: "Changes",
         paragraphs: [
           "We will update this page if we add new cookies, for example when game accounts or payments launch.",
+        ],
+      },
+    ],
+  },
+
+  about: {
+    title: "About Us",
+    undated: true,
+    contactIntro: "Want to get in touch? Email us at",
+    description:
+      "Idolrun Entertainment is a small team building Battle Kards, a turn-based fantasy card game inspired by Asian mythologies.",
+    intro:
+      "Idolrun Entertainment, Inc. is a small independent team building Battle Kards, a turn-based MMO card game where players battle for glory. Battle Kards is in development with Coast 2 Coast Games and is coming soon.",
+    sections: [
+      {
+        heading: "Our story",
+        paragraphs: [
+          "Battle Kards began as one idea and was rebuilt from scratch when our first approach hit a dead end. The new version takes its inspiration from the pace of Quake 3 capture-the-flag, the turn-by-turn tension of Pokémon battles and the dark scale of Dante’s Inferno, set in a world drawn from ancient myths and legends of Asia.",
+        ],
+      },
+      {
+        heading: "What is Battle Kards",
+        bullets: [
+          "Deck building: choose a deck of 9 from a pool of 25 cards across Attack, Defence, Buff, Debuff and Special types.",
+          "Captains: lead your deck with one of 27 captains, each with their own strengths and abilities.",
+          "Nine realms: collect Resonance to capture shrines and strongholds on the realm map.",
+          "Guild warfare: guilds fight three-way PvP battles for control of strongholds.",
+          "Progression: four currencies (Coins, Crystals, Resonance and XP), ranks and an in-game store.",
+        ],
+      },
+      {
+        heading: "Where we are today",
+        paragraphs: [
+          "We are fixing bugs and polishing gameplay details ahead of launch, which we are planning for the coming months. Details above reflect our current design and may change before release.",
+          "We share progress openly on our Updates page, with news, screenshots and answers to common questions. You can also follow us on X, Instagram and TikTok.",
+        ],
+      },
+      {
+        heading: "For players everywhere",
+        paragraphs: [
+          "The site is available in English, Japanese, Indonesian, Korean and Simplified Chinese, and we plan to keep growing our community across regions.",
+        ],
+      },
+    ],
+  },
+
+  support: {
+    title: "Support",
+    undated: true,
+    contactIntro: "Still need help? Email us at",
+    description:
+      "How to get help, report a problem or reach the Battle Kards team at Idolrun Entertainment.",
+    intro:
+      "We are a small team, and we read every message. Here is where to find answers and how to reach us.",
+    sections: [
+      {
+        heading: "Quick answers",
+        bullets: [
+          "Game news and release status: Battle Kards is not out yet. Follow the Updates page for the latest news.",
+          "Common questions: the FAQ on the Updates page answers the most frequent ones.",
+          "Purchases: in-game sales have not started, so there is nothing to buy or refund yet.",
+        ],
+      },
+      {
+        heading: "Contact us",
+        paragraphs: [
+          "Email us for questions, feedback or bug reports. We reply as soon as we can. Please include:",
+        ],
+        bullets: [
+          "a short description of the problem or question;",
+          "the page address, and your browser and device, if it is about the website;",
+          "a screenshot if it helps.",
+        ],
+      },
+      {
+        heading: "Privacy, comments and legal requests",
+        bullets: [
+          "Remove or correct a comment you posted: email us with the update and the name you used. See our Privacy Policy.",
+          "Report a comment that breaks the rules: email us with a link to the update and the comment text.",
+          "Copyright or trademark concerns: see our Legal Notice.",
+        ],
+      },
+      {
+        heading: "Community",
+        paragraphs: [
+          "Follow our official accounts on X, Instagram and TikTok for announcements. We will never ask for your password or payment details by message or email.",
         ],
       },
     ],

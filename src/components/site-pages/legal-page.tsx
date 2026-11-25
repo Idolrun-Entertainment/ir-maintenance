@@ -13,7 +13,7 @@ import { DEFAULT_LOCALE, type Locale } from "@/i18n/config"
 import { homePanelAssets } from "@/lib/home-assets"
 import { buildAlternates, buildOpenGraph } from "@/lib/seo"
 
-// Legal text is English-only: the header and footer follow `locale`, the
+// Legal, About and Support text is English-only: the header and footer follow `locale`, the
 // article body stays in English so no unreviewed translation is shown as law.
 export function LegalPage({ locale, slug }: { locale: Locale; slug: LegalSlug }) {
   const doc = legalDocs[slug]
@@ -35,7 +35,9 @@ export function LegalPage({ locale, slug }: { locale: Locale; slug: LegalSlug })
             />
             <div className="home-panel__content">
               <h1 className="home-panel__title">{doc.title}</h1>
-              <p className="home-panel__meta">Last updated {LEGAL_UPDATED}</p>
+              {doc.undated ? null : (
+                <p className="home-panel__meta">Last updated {LEGAL_UPDATED}</p>
+              )}
               <div className="home-panel__body">
                 <p>{doc.intro}</p>
                 {doc.sections.map((section) => (
@@ -54,7 +56,7 @@ export function LegalPage({ locale, slug }: { locale: Locale; slug: LegalSlug })
                 <section>
                   <h2>Contact</h2>
                   <p>
-                    Questions about this page? Email us at{" "}
+                    {doc.contactIntro ?? "Questions about this page? Email us at"}{" "}
                     <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
                   </p>
                 </section>
