@@ -35,6 +35,18 @@ model Comment {
   @@index([blogId, createdAt])
 }
 
+// Public contact form submissions. Read in /admin/queries; `readAt` is null
+// until an admin opens the query.
+model ContactMessage {
+  id        String    @id @default(cuid())
+  email     String
+  message   String    @db.Text
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([createdAt])
+}
+
 model Faq {
   id           String           @id @default(cuid())
   question     String

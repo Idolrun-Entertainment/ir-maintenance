@@ -13,6 +13,8 @@ type UseAdminPaginatedListOptions = {
   deletePath: (id: string) => string
   deleteError: string
   deletedMessage: string
+  /** Extra `status` query param (e.g. "unread"). Remount the consumer when it changes. */
+  status?: string
 }
 
 export function useAdminPaginatedList<T extends { id: string }>({
@@ -21,6 +23,7 @@ export function useAdminPaginatedList<T extends { id: string }>({
   deletePath,
   deleteError,
   deletedMessage,
+  status,
 }: UseAdminPaginatedListOptions) {
   const [items, setItems] = useState<T[]>([])
   const [loading, setLoading] = useState(true)
@@ -42,6 +45,7 @@ export function useAdminPaginatedList<T extends { id: string }>({
             page,
             limit: 10,
             search: search || undefined,
+            status,
           },
         })
 
@@ -80,7 +84,11 @@ export function useAdminPaginatedList<T extends { id: string }>({
     return () => {
       cancelled = true
     }
-  }, [page, search, reloadNonce, path, loadError])
+  }, [page, search, reloadNonce, path, loadError, status])
+
+  function reload() {
+    setReloadNonce((current) => current + 1)
+  }
 
   function onSearchChange(value: string) {
     setPage(1)
@@ -132,5 +140,6 @@ export function useAdminPaginatedList<T extends { id: string }>({
     goToPrevious,
     goToNext,
     confirmDelete,
+    reload,
   }
 }

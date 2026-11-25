@@ -3,6 +3,7 @@ import { ValidationError } from "@/lib/errors"
 export async function readCappedJson(
   request: Request,
   maxBytes: number,
+  label = "Comment",
 ): Promise<unknown> {
   const reader = request.body?.getReader()
 
@@ -24,7 +25,7 @@ export async function readCappedJson(
 
     if (total > maxBytes) {
       await reader.cancel()
-      throw new ValidationError("Comment is too large")
+      throw new ValidationError(`${label} is too large`)
     }
 
     chunks.push(value)

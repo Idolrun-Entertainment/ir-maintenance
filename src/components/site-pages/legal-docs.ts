@@ -30,7 +30,7 @@ export const legalDocs: Record<LegalSlug, LegalDoc> = {
           "Page views: we count how many times each update is viewed. The count is not tied to your identity.",
           "Language preference: if you switch language, we remember your choice in a cookie (see the Cookie Policy).",
           "Technical logs: our hosting provider automatically records standard request data such as IP address, browser type and pages requested, for security and reliability.",
-          "Messages to us: if you email us, we keep your message and address so we can reply.",
+          "Messages to us: if you use our contact form or email us, we keep your email address and message so our team can read and reply to them.",
         ],
       },
       {
@@ -301,7 +301,7 @@ export const legalDocs: Record<LegalSlug, LegalDoc> = {
       {
         heading: "Contact us",
         paragraphs: [
-          "Email us for questions, feedback or bug reports. We reply as soon as we can. Please include:",
+          "Send us your question, feedback or bug report through our Contact page, or email us directly. We reply as soon as we can. Please include:",
         ],
         bullets: [
           "a short description of the problem or question;",

@@ -27,6 +27,15 @@ export type AdminComment = Comment & {
   }
 }
 
+// A contact form submission. `readAt` is null until an admin opens it.
+export type ContactMessage = {
+  id: string
+  email: string
+  message: string
+  readAt: string | null
+  createdAt: string
+}
+
 export type News = {
   id: string
   title: string

@@ -375,6 +375,7 @@
   box-shadow: 0 0 0 2px rgb(110 222 254 / 0.22);
 }
 
+.home-comments__input[aria-invalid="true"],
 .home-comments__textarea[aria-invalid="true"] {
   border-color: #ff8f8f;
 }
@@ -416,6 +417,11 @@
 .home-comments__submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.home-comments__success {
+  color: #8fe3b0;
+  font-size: 0.8rem;
 }
 
 .home-comments__empty {

@@ -11,6 +11,7 @@ const navItems = [
   { href: "/admin/news", label: "News" },
   { href: "/admin/faqs", label: "FAQs" },
   { href: "/admin/comments", label: "Comments" },
+  { href: "/admin/queries", label: "Queries" },
 ]
 
 type AdminNavProps = {

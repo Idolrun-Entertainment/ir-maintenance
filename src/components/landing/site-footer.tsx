@@ -53,6 +53,7 @@ export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const footerLinks = [
     { label: footer.about, path: "/about" },
     { label: footer.support, path: "/support" },
+    { label: footer.contact, path: "/contact" },
   ]
 
   return (
@@ -64,7 +65,6 @@ export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               {label}
             </Link>
           ))}
-          <span>{footer.contact}</span>
         </div>
 
         <Separator className="my-5 bg-white/40" />
