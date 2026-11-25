@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next"
 
+import { LEGAL_SLUGS } from "@/components/site-pages/legal-docs"
 import { DEFAULT_LOCALE, LOCALES, localePath, type Locale } from "@/i18n/config"
 import { prisma } from "@/lib/prisma"
 import { absoluteUrl } from "@/lib/seo"
@@ -39,6 +40,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: Entry[] = [
     ...entriesFor("/", LOCALES),
     ...entriesFor("/updates", LOCALES),
+    // Legal text is English-only; localized copies are noindex, so list English only.
+    ...LEGAL_SLUGS.flatMap((slug) => entriesFor(`/${slug}`, [])),
   ]
 
   try {

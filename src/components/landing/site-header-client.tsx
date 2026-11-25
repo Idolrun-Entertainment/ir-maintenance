@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils"
 type NavLabels = Dictionary["nav"]
 
 type SiteHeaderClientProps = {
-  current: "game" | "updates"
+  current: "game" | "updates" | "none"
   locale: Locale
   labels: NavLabels
   languageLinks: LanguageLink[]

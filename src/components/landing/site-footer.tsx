@@ -1,7 +1,8 @@
 import Image from "next/image"
+import Link from "next/link"
 
 import { Separator } from "@/components/ui/separator"
-import { DEFAULT_LOCALE, type Locale } from "@/i18n/config"
+import { DEFAULT_LOCALE, localePath, type Locale } from "@/i18n/config"
 import { getDictionary } from "@/i18n/dictionary"
 
 const paymentPartners = [
@@ -40,7 +41,12 @@ const socialLinks = [
 
 export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const { footer } = getDictionary(locale)
-  const footerNotes = [footer.privacy, footer.terms, footer.legal, footer.cookies]
+  const footerNotes = [
+    { label: footer.privacy, path: "/privacy" },
+    { label: footer.terms, path: "/terms" },
+    { label: footer.legal, path: "/legal" },
+    { label: footer.cookies, path: "/cookies" },
+  ]
   const footerLinks = [footer.about, footer.support, footer.contact]
 
   return (
@@ -68,8 +74,14 @@ export function SiteFooter({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 {footer.copyright}
               </p>
               <div className="mt-2.5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                {footerNotes.map((label) => (
-                  <span key={label}>{label}</span>
+                {footerNotes.map(({ label, path }) => (
+                  <Link
+                    key={path}
+                    href={localePath(locale, path)}
+                    className="transition-colors duration-150 hover:text-white/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+                  >
+                    {label}
+                  </Link>
                 ))}
               </div>
             </div>

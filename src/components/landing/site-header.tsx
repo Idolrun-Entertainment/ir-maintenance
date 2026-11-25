@@ -4,7 +4,7 @@ import { getDictionary } from "@/i18n/dictionary"
 import { buildLanguageLinks } from "@/i18n/links"
 
 type SiteHeaderProps = {
-  current?: "game" | "updates"
+  current?: "game" | "updates" | "none"
   locale?: Locale
   /** Unprefixed English path of this page, used to build language switch links. */
   path?: string
